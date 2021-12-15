@@ -1,33 +1,20 @@
-package com.barauna.DEVinHouse.entity;
+package com.barauna.DEVinHouse.dto.response;
 
-
-import java.util.Comparator;
 import java.util.Date;
 
-public class Villager {
-    private Integer id;
+public class VillagerDetailResponseDTO {
     private String name;
     private String surName;
-    private Float wage;
     private Date birthday;
     private String document;
+    private Float wage;
 
-
-    public Villager(Integer id, String name, String surName, String document, Date birthday, Float wage) {
-        this.id = id;
+    public VillagerDetailResponseDTO(String name, String surName, Date birthday, String document, Float wage) {
         this.name = name;
         this.surName = surName;
         this.birthday = birthday;
         this.document = document;
         this.wage = wage;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -46,14 +33,6 @@ public class Villager {
         this.surName = surName;
     }
 
-    public Float getWage() {
-        return wage;
-    }
-
-    public void setWage(Float wage) {
-        this.wage = wage;
-    }
-
     public Date getBirthday() {
         return birthday;
     }
@@ -70,7 +49,11 @@ public class Villager {
         this.document = document;
     }
 
-    public static final Comparator<Villager> compareByCost = (Villager v1, Villager v2) -> {
-        return v1.getWage().compareTo(v2.getWage());
-    };
+    public Float getWage() {
+        return wage;
+    }
+
+    public void setWage(Float wage) {
+        this.wage = wage;
+    }
 }

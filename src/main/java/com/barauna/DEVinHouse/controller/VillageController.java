@@ -19,6 +19,11 @@ public class VillageController {
         this.villageService = villageService;
     }
 
+    @GetMapping("/")
+    public String hellowWorld() {
+        return "Hello World";
+    }
+
     @GetMapping("/villagers")
     public List<Villager> index() {
         return villageService.getVillagers();

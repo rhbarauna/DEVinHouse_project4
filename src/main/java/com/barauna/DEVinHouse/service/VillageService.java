@@ -2,6 +2,8 @@ package com.barauna.DEVinHouse.service;
 
 import com.barauna.DEVinHouse.entity.Villager;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

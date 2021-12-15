@@ -1,5 +1,6 @@
 package com.barauna.DEVinHouse.service;
 
+import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
 import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.repository.VillagerRepository;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,16 @@ public class VillagerService {
         return villagerRepository.all();
     }
 
-    public Optional<Villager> getById(Integer villagerId) {
-        return villagerRepository.find(villagerId);
+    public VillagerDetailResponseDTO getById(Integer villagerId) {
+        Optional<Villager> result = villagerRepository.find(villagerId);
+
+        if(result.isEmpty()) {
+            return null;
+        }
+
+        Villager villager = result.get();
+
+        return new VillagerDetailResponseDTO(villager.getName(), villager.getSurName(), villager.getBirthday(), villager.getDocument(), villager.getWage());
     }
 
     public List<Villager> filterByName(String villagerName) {
