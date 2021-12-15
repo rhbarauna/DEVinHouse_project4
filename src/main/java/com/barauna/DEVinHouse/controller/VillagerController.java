@@ -3,12 +3,10 @@ package com.barauna.DEVinHouse.controller;
 import com.barauna.DEVinHouse.dto.request.CreateVillagerRequestDTO;
 import com.barauna.DEVinHouse.dto.response.FilterVillagerResponseDTO;
 import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
-import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.service.VillagerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/villager")
@@ -26,7 +24,7 @@ public class VillagerController {
     }
 
     @GetMapping("/")
-    public List<FilterVillagerResponseDTO> list(){
+    public List<FilterVillagerResponseDTO> list() {
         return villagerService.getAll();
     }
 
@@ -42,16 +40,16 @@ public class VillagerController {
 
     @GetMapping("/age")
     public List<FilterVillagerResponseDTO> filterByAgeGreaterThanOrEqual(@RequestParam("age") Integer age){
-        return villagerService.filterByName(villagerName);
+        return villagerService.filterByAge(age);
     }
 
     @PostMapping("/")
-    public List<FilterVillagerResponseDTO> filterByAgeGreaterThanOrEqual(@RequestBody CreateVillagerRequestDTO createVillagerRequestDTO){
-        return villagerService.filterByName(villagerName);
+    public VillagerDetailResponseDTO store(@RequestBody CreateVillagerRequestDTO createVillagerRequestDTO){
+        return villagerService.create(createVillagerRequestDTO);
     }
 
     @DeleteMapping("/{id}")
-    public VillagerDetailResponseDTO deleteById(@PathVariable("id") Integer villagerId){
-        return villagerService.getById(villagerId);
+    public void delete(@PathVariable("id") Integer villagerId){
+        villagerService.delete(villagerId);
     }
 }

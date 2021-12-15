@@ -1,19 +1,18 @@
 package com.barauna.DEVinHouse.entity;
 
 
+import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
 
 public class Villager {
     private Integer id;
     private String name;
     private String surName;
     private Float wage;
-    private Date birthday;
+    private LocalDate birthday;
     private String document;
 
-
-    public Villager(Integer id, String name, String surName, String document, Date birthday, Float wage) {
+    public Villager(Integer id, String name, String surName, String document, LocalDate birthday, Float wage) {
         this.id = id;
         this.name = name;
         this.surName = surName;
@@ -54,11 +53,11 @@ public class Villager {
         this.wage = wage;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

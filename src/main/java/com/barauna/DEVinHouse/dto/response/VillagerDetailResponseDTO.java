@@ -1,15 +1,16 @@
 package com.barauna.DEVinHouse.dto.response;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class VillagerDetailResponseDTO {
     private String name;
     private String surName;
-    private Date birthday;
+    private LocalDate birthday;
     private String document;
     private Float wage;
 
-    public VillagerDetailResponseDTO(String name, String surName, Date birthday, String document, Float wage) {
+    public VillagerDetailResponseDTO(String name, String surName, LocalDate birthday, String document, Float wage) {
         this.name = name;
         this.surName = surName;
         this.birthday = birthday;
@@ -33,11 +34,11 @@ public class VillagerDetailResponseDTO {
         this.surName = surName;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

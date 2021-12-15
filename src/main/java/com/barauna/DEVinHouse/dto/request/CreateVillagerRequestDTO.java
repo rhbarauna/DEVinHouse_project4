@@ -23,7 +23,7 @@ public class CreateVillagerRequestDTO {
         this.surName = surName;
     }
 
-    public String getBirthDay() {
+    public String getBirthday() {
         return birthDay;
     }
 
