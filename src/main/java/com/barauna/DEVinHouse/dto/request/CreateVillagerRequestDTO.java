@@ -1,9 +1,11 @@
 package com.barauna.DEVinHouse.dto.request;
 
+import java.time.LocalDate;
+
 public class CreateVillagerRequestDTO {
     private String name;
     private String surName;
-    private String birthDay;
+    private LocalDate birthDay;
     private String document;
     private Float wage;
 
@@ -23,11 +25,11 @@ public class CreateVillagerRequestDTO {
         this.surName = surName;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthDay;
     }
 
-    public void setBirthDay(String birthDay) {
+    public void setBirthDay(LocalDate birthDay) {
         this.birthDay = birthDay;
     }
 

@@ -1,24 +1,27 @@
-package com.barauna.DEVinHouse.repository;
+package com.barauna.DEVinHouse.database.repository;
 
 import com.barauna.DEVinHouse.entity.Villager;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Repository;
 
-import java.text.ParseException;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Repository
 public class VillagerRepository {
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    private Connection dbConnection;
+
+    public VillagerRepository(Connection connection) {
+        this.dbConnection = connection;
+    }
+
     private List<Villager> villagers = Arrays.asList(
         new Villager(1, "Villager 1", "surname", "100.000.000-00", LocalDate.of(1941, Month.MARCH, 19), 10f),
         new Villager(2, "Villager 2", "surname", "200.000.000-00", LocalDate.of(1953, Month.APRIL, 29), 20f),
@@ -44,25 +47,24 @@ public class VillagerRepository {
     public List<Villager> getByBirthMonth(String villagerBirthMonth) {
         return villagers.stream()
                 .filter(
-                    villager -> {
-                        //TODO - buscar por mes
-                        return true;
-                    }
+                        villager -> villager.getBirthday().getMonth().name().equalsIgnoreCase(villagerBirthMonth)
                 ).collect(Collectors.toList());
     }
 
     public List<Villager> getByAge(Integer age) {
         return villagers.stream()
-                .filter(villager -> Period.between(villager.getBirthday(), LocalDate.now()).getYears() >= age).collect(Collectors.toList());
+                .filter(
+                        villager -> Period.between(villager.getBirthday(), LocalDate.now()).getYears() >= age
+                ).collect(Collectors.toList());
     }
 
     public void delete(Integer villagerId) {
         villagers.removeIf(villager -> villager.getId().equals(villagerId));
     }
 
-    public Villager store(String name, String surName, String birthday, String document, Float wage) {
+    public Villager store(String name, String surName, LocalDate birthday, String document, Float wage) {
         final Integer id = villagers.get(villagers.size()-1).getId() + 1;
-        final Villager newVillager = new Villager(id, name, surName, document, LocalDate.parse(birthday), wage);
+        final Villager newVillager = new Villager(id, name, surName, document, birthday, wage);
         villagers.add(newVillager);
         return newVillager;
     }

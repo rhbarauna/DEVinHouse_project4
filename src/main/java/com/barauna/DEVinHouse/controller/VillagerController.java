@@ -33,9 +33,9 @@ public class VillagerController {
         return villagerService.filterByName(villagerName);
     }
 
-    @GetMapping("/birthmonth")
-    public List<FilterVillagerResponseDTO> filterByBirthMonth(@RequestParam("month") String villagerBirthMonth){
-        return villagerService.filterByMonth(villagerBirthMonth);
+    @GetMapping("/birth")
+    public List<FilterVillagerResponseDTO> filterByBirthMonth(@RequestParam("month") String birthMonth){
+        return villagerService.filterByMonth(birthMonth);
     }
 
     @GetMapping("/age")
@@ -44,7 +44,7 @@ public class VillagerController {
     }
 
     @PostMapping("/")
-    public VillagerDetailResponseDTO store(@RequestBody CreateVillagerRequestDTO createVillagerRequestDTO){
+    public VillagerDetailResponseDTO store(@RequestBody CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
         return villagerService.create(createVillagerRequestDTO);
     }
 
