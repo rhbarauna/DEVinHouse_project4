@@ -6,7 +6,7 @@ import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
 import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.database.repository.VillagerRepository;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
-import com.barauna.DEVinHouse.utils.CPFUtils;
+import com.barauna.DEVinHouse.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,7 +58,9 @@ public class VillagerService {
     }
 
     public VillagerDetailResponseDTO create(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
-        validate(createVillagerRequestDTO);
+        //TODO - validate requestDTO
+//        validate(createVillagerRequestDTO);
+
         final Villager newVillager = villagerRepository.store(createVillagerRequestDTO.getName(), createVillagerRequestDTO.getSurName(), createVillagerRequestDTO.getBirthday(), createVillagerRequestDTO.getDocument(), createVillagerRequestDTO.getWage());
         return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage());
     }
@@ -72,15 +74,15 @@ public class VillagerService {
     }
 
     private void validate(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
-        if(!CPFUtils.validate(createVillagerRequestDTO.getDocument())) {
+        if(!StringUtils.validateCPF(createVillagerRequestDTO.getDocument())) {
             throw new InvalidVillagerDataException("Invalid CPF value.");
         }
 
-        if(createVillagerRequestDTO.getName().replaceAll("[^\\W.]", "").trim().isEmpty()) {
+        if(!StringUtils.validateName(createVillagerRequestDTO.getName()) || !createVillagerRequestDTO.getName().trim().isEmpty()) {
             throw new InvalidVillagerDataException("Invalid name value. Cannot be only spaces nor contain number.");
         }
 
-        if(createVillagerRequestDTO.getSurName().replaceAll("[^\\W.]", "").trim().isEmpty()) {
+        if(!StringUtils.validateName(createVillagerRequestDTO.getSurName()) || !createVillagerRequestDTO.getSurName().trim().isEmpty()) {
             throw new InvalidVillagerDataException("Invalid surname value. Cannot be only spaces nor contain number.");
         }
 

@@ -8,11 +8,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//TODO - validar dados de entrada
+//TODO - acertar a parte de websecurity através de uma página de login
+//TODO - Adicionar JWT
+//TODO - Adicionar JDBC
+//TODO - Criar um método que trate o erro no controller
+//TODO - Adicionar documentação nos métodos e nas rotas e criar uma pagina de documentação
+//TODO - criar um README completo com as informações necessárias para subir a aplicação
+//TODO - adicionar flyway https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/howto-database-initialization.html
+//TODO - criar testes unitários para praticar.
+//TODO - Não permitir cadastro com valores inválidos para o habitante
+//TODO - lan;car exceção de notfound quando buscar por id e nao achar nenhum?
+
 @RestController
 @RequestMapping("/villager")
 public class VillagerController {
 
-    private VillagerService villagerService;
+    private final VillagerService villagerService;
 
     public VillagerController(VillagerService villagerService) {
         this.villagerService = villagerService;
@@ -38,12 +50,12 @@ public class VillagerController {
         return villagerService.filterByMonth(birthMonth);
     }
 
-    @GetMapping("/age")
-    public List<FilterVillagerResponseDTO> filterByAgeGreaterThanOrEqual(@RequestParam("age") Integer age){
+    @GetMapping("/age/{age}")
+    public List<FilterVillagerResponseDTO> filterByAgeGreaterThanOrEqual(@PathVariable("age") Integer age){
         return villagerService.filterByAge(age);
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public VillagerDetailResponseDTO store(@RequestBody CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
         return villagerService.create(createVillagerRequestDTO);
     }
@@ -52,4 +64,9 @@ public class VillagerController {
     public void delete(@PathVariable("id") Integer villagerId){
         villagerService.delete(villagerId);
     }
+
+//    @ExceptionHandler(Exception.class)
+//    public String handleError(Exception ex) {
+//        return ex.getMessage();
+//    }
 }
