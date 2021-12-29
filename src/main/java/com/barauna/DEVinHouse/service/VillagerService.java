@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class VillagerService {
-    private VillagerRepository villagerRepository;
+    private final VillagerRepository villagerRepository;
 
     public VillagerService(VillagerRepository villagerRepository) {
         this.villagerRepository = villagerRepository;
@@ -59,7 +59,6 @@ public class VillagerService {
     }
 
     public VillagerDetailResponseDTO create(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
-        //TODO - validate requestDTO
 //        validate(createVillagerRequestDTO);
 
         final Villager newVillager = villagerRepository.store(createVillagerRequestDTO.getName(), createVillagerRequestDTO.getSurName(), createVillagerRequestDTO.getBirthday(), createVillagerRequestDTO.getDocument(), createVillagerRequestDTO.getWage());
@@ -70,7 +69,7 @@ public class VillagerService {
         villagerRepository.delete(villagerId);
     }
 
-    private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) throws SQLException {
+    private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) {
         return result.stream().map(villager -> new FilterVillagerResponseDTO(villager.getId(), villager.getName())).collect(Collectors.toList());
     }
 

@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-//TODO - validar dados de entrada
 //TODO - acertar a parte de websecurity através de uma página de login
+//TODO - add validation using jsonformat?
+//TODO - validar dados de entrada
+//TODO - validate requestDTO
+//TODO - create a custom date serializer https://www.baeldung.com/jackson-serialize-dates
 //TODO - Adicionar JWT
 //TODO - Adicionar JDBC
 //TODO - Criar um método que trate o erro no controller
@@ -19,7 +22,7 @@ import java.util.List;
 //TODO - adicionar flyway https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/howto-database-initialization.html
 //TODO - criar testes unitários para praticar.
 //TODO - Não permitir cadastro com valores inválidos para o habitante
-//TODO - lan;car exceção de notfound quando buscar por id e nao achar nenhum?
+//TODO - lançar exceção de notfound quando buscar por id e nao achar nenhum?
 
 @RestController
 @RequestMapping("/villager")
@@ -65,9 +68,4 @@ public class VillagerController {
     public void delete(@PathVariable("id") Long villagerId) throws SQLException {
         villagerService.delete(villagerId);
     }
-
-//    @ExceptionHandler(Exception.class)
-//    public String handleError(Exception ex) {
-//        return ex.getMessage();
-//    }
 }
