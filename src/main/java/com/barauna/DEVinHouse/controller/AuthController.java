@@ -1,5 +1,6 @@
 package com.barauna.DEVinHouse.controller;
 
+import com.barauna.DEVinHouse.dto.request.MailRequestDTO;
 import com.barauna.DEVinHouse.dto.response.JwtTokenDTO;
 import com.barauna.DEVinHouse.security.UserDetailsImpl;
 import com.barauna.DEVinHouse.service.AuthService;
@@ -7,6 +8,7 @@ import com.barauna.DEVinHouse.utils.JWTTokenUtils;
 import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,9 +36,9 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PostMapping("/forgot")
-//    public ResponseEntity<Void> forgot(@RequestBody MailDTO mail){
-//        authService.sendNewPass(mail.getEmail());
-//        return ResponseEntity.noContent().build();
-//    }
+    @PostMapping("/forgot")
+    public ResponseEntity<Void> forgot(@RequestBody MailRequestDTO mail){
+        authService.sendNewPass(mail.getEmail());
+        return ResponseEntity.noContent().build();
+    }
 }

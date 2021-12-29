@@ -45,7 +45,7 @@ public class JWTTokenUtils {
 
     private Claims getClaims(String token) {
         try {
-            Jws<Claims> parseClaimsJws = Jwts.parser().setSigningKey(secret.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
+            Jws<Claims> parseClaimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return parseClaimsJws.getBody();
         } catch (Exception e) {
             System.out.println(e.getMessage());

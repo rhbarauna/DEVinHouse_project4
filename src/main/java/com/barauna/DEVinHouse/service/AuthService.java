@@ -12,11 +12,13 @@ public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
+    private final EmailService emailService;
 
-    public AuthService(PasswordEncoder passwordEncoder, UserService userService, UserDetailsServiceImpl userDetailsService) {
+    public AuthService(PasswordEncoder passwordEncoder, UserService userService, UserDetailsServiceImpl userDetailsService, EmailService emailService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.userDetailsService = userDetailsService;
+        this.emailService = emailService;
     }
 
     public UserDetailsImpl authenticated(){
@@ -32,7 +34,7 @@ public class AuthService {
         String encodePass = passwordEncoder.encode(newPass);
         user.setPassword(encodePass);
         userService.updateUser(user);
-//        emailService.sendNewPassword(user, newPass);
+        emailService.sendNewPassword(email, newPass);
     }
 
     private String generatePassword() {
