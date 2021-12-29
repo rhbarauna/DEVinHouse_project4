@@ -14,8 +14,7 @@ import java.util.List;
 //TODO - validar dados de entrada
 //TODO - validate requestDTO
 //TODO - create a custom date serializer https://www.baeldung.com/jackson-serialize-dates
-//TODO - Adicionar JWT
-//TODO - Adicionar JDBC
+//TODO - Adicionar JWT ( criar gtabela de usuario no banco )
 //TODO - Criar um método que trate o erro no controller
 //TODO - Adicionar documentação nos métodos e nas rotas e criar uma pagina de documentação
 //TODO - criar um README completo com as informações necessárias para subir a aplicação
