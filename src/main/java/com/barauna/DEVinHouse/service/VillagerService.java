@@ -9,6 +9,7 @@ import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
 import com.barauna.DEVinHouse.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +23,11 @@ public class VillagerService {
         this.villagerRepository = villagerRepository;
     }
 
-    public List<Villager> getVillagers() {
+    public List<Villager> getVillagers() throws SQLException {
         return villagerRepository.all();
     }
 
-    public VillagerDetailResponseDTO getById(Integer villagerId) {
+    public VillagerDetailResponseDTO getById(Long villagerId)  throws SQLException {
         Optional<Villager> result = villagerRepository.find(villagerId);
 
         if(result.isEmpty()) {
@@ -37,22 +38,22 @@ public class VillagerService {
         return new VillagerDetailResponseDTO(villager.getName(), villager.getSurName(), villager.getBirthday(), villager.getDocument(), villager.getWage());
     }
 
-    public List<FilterVillagerResponseDTO> getAll() {
+    public List<FilterVillagerResponseDTO> getAll() throws SQLException {
         List<Villager> result = villagerRepository.all();
         return buildFilterVillagerResponseDTO(result);
     }
 
-    public List<FilterVillagerResponseDTO> filterByName(String villagerName) {
+    public List<FilterVillagerResponseDTO> filterByName(String villagerName) throws SQLException {
         List<Villager> result = villagerRepository.getByName(villagerName);
         return buildFilterVillagerResponseDTO(result);
     }
 
-    public List<FilterVillagerResponseDTO> filterByMonth(String birthMonth) {
+    public List<FilterVillagerResponseDTO> filterByMonth(String birthMonth) throws SQLException {
         List<Villager> result = villagerRepository.getByBirthMonth(birthMonth);
         return buildFilterVillagerResponseDTO(result);
     }
 
-    public List<FilterVillagerResponseDTO> filterByAge(Integer age) {
+    public List<FilterVillagerResponseDTO> filterByAge(Integer age) throws SQLException {
         List<Villager> result = villagerRepository.getByAge(age);
         return buildFilterVillagerResponseDTO(result);
     }
@@ -65,11 +66,11 @@ public class VillagerService {
         return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage());
     }
 
-    public void delete(Integer villagerId) {
+    public void delete(Long villagerId) throws SQLException {
         villagerRepository.delete(villagerId);
     }
 
-    private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) {
+    private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) throws SQLException {
         return result.stream().map(villager -> new FilterVillagerResponseDTO(villager.getId(), villager.getName())).collect(Collectors.toList());
     }
 

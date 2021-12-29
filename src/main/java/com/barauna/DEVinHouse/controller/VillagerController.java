@@ -6,6 +6,7 @@ import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
 import com.barauna.DEVinHouse.service.VillagerService;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 //TODO - validar dados de entrada
@@ -31,27 +32,27 @@ public class VillagerController {
     }
 
     @GetMapping("/{id}")
-    public VillagerDetailResponseDTO getById(@PathVariable("id") Integer villagerId){
+    public VillagerDetailResponseDTO getById(@PathVariable("id") Long villagerId) throws SQLException {
         return villagerService.getById(villagerId);
     }
 
     @GetMapping("/")
-    public List<FilterVillagerResponseDTO> list() {
+    public List<FilterVillagerResponseDTO> list() throws SQLException {
         return villagerService.getAll();
     }
 
     @GetMapping("/name")
-    public List<FilterVillagerResponseDTO> filterByName(@RequestParam("name") String villagerName){
+    public List<FilterVillagerResponseDTO> filterByName(@RequestParam("name") String villagerName) throws SQLException {
         return villagerService.filterByName(villagerName);
     }
 
     @GetMapping("/birth")
-    public List<FilterVillagerResponseDTO> filterByBirthMonth(@RequestParam("month") String birthMonth){
+    public List<FilterVillagerResponseDTO> filterByBirthMonth(@RequestParam("month") String birthMonth) throws SQLException {
         return villagerService.filterByMonth(birthMonth);
     }
 
     @GetMapping("/age/{age}")
-    public List<FilterVillagerResponseDTO> filterByAgeGreaterThanOrEqual(@PathVariable("age") Integer age){
+    public List<FilterVillagerResponseDTO> filterByAgeGreaterThanOrEqual(@PathVariable("age") Integer age) throws SQLException {
         return villagerService.filterByAge(age);
     }
 
@@ -61,7 +62,7 @@ public class VillagerController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Integer villagerId){
+    public void delete(@PathVariable("id") Long villagerId) throws SQLException {
         villagerService.delete(villagerId);
     }
 

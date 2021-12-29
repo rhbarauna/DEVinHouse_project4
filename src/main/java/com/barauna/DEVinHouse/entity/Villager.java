@@ -5,14 +5,14 @@ import java.time.LocalDate;
 import java.util.Comparator;
 
 public class Villager {
-    private Integer id;
+    private Long id;
     private String name;
     private String surName;
     private Float wage;
     private LocalDate birthday;
     private String document;
 
-    public Villager(Integer id, String name, String surName, String document, LocalDate birthday, Float wage) {
+    public Villager(Long id, String name, String surName, String document, LocalDate birthday, Float wage) {
         this.id = id;
         this.name = name;
         this.surName = surName;
@@ -21,11 +21,11 @@ public class Villager {
         this.wage = wage;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

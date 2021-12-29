@@ -1,20 +1,12 @@
 package com.barauna.DEVinHouse.dto.response;
 
 public class FilterVillagerResponseDTO {
-    private Integer id;
+    private Long id;
     private String name;
 
-    public FilterVillagerResponseDTO(Integer id, String name) {
+    public FilterVillagerResponseDTO(Long id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

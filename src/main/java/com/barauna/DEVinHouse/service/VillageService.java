@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,18 +22,18 @@ public class VillageService {
         this.villagerService = villagerService;
     }
 
-    public List<Villager> getVillagers() {
+    public List<Villager> getVillagers() throws SQLException {
         return villagerService.getVillagers();
     }
 
-    public Float getTotalCost() {
+    public Float getTotalCost() throws SQLException {
         return getVillagers().stream().reduce(
                 villageBudget,(accumulator, villager) -> accumulator - villager.getWage(),
                 Float::sum
         );
     }
 
-    public Optional<Villager> getBiggestVillagerCost() {
+    public Optional<Villager> getBiggestVillagerCost() throws SQLException {
         return getVillagers().stream().max(Villager.compareByCost);
     }
 
@@ -40,7 +41,7 @@ public class VillageService {
         return this.villageBudget;
     }
 
-    public Float getVillageTotalCost() {
+    public Float getVillageTotalCost() throws SQLException {
         return getVillagers().stream().reduce(
             0F,(accumulator, villager) -> accumulator + villager.getWage(),
             Float::sum
