@@ -1,6 +1,5 @@
 package com.barauna.DEVinHouse.entity;
 
-
 import java.time.LocalDate;
 import java.util.Comparator;
 
