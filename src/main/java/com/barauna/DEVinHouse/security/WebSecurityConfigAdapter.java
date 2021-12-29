@@ -1,6 +1,7 @@
 package com.barauna.DEVinHouse.security;
 
 import com.barauna.DEVinHouse.security.filters.JWTAuthenticationFilter;
+import com.barauna.DEVinHouse.security.filters.JWTAuthorizationFilter;
 import com.barauna.DEVinHouse.service.UserDetailsServiceImpl;
 import com.barauna.DEVinHouse.utils.JWTTokenUtils;
 import org.springframework.context.annotation.Bean;
@@ -55,8 +56,7 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
             .authenticated(); // precisa estar autenticada
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtTokenUtils)); //sobrescrever rota de autenticação padrão e outras coisas
-//        http.addFilter(new JWTAuthorizationFilter(authenticationManager(),
-//                jwtUtil, userService));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtTokenUtils, userDetailsService));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
