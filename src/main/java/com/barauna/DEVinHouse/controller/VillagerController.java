@@ -4,17 +4,17 @@ import com.barauna.DEVinHouse.dto.request.CreateVillagerRequestDTO;
 import com.barauna.DEVinHouse.dto.response.FilterVillagerResponseDTO;
 import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
 import com.barauna.DEVinHouse.service.VillagerService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
 
-//TODO - acertar a parte de websecurity através de uma página de login
-//TODO - add validation using jsonformat?
-//TODO - validar dados de entrada
-//TODO - validate requestDTO
+//TODO - acertar a parte de websecurity - roles
+//TODO - validar createVillagerrequestDTO
 //TODO - create a custom date serializer https://www.baeldung.com/jackson-serialize-dates
-//TODO - Adicionar JWT ( criar gtabela de usuario no banco )
+//TODO - Criar tabela de usuario no banco
+//TODO - Fazer com que os villagers tenham usuário
 //TODO - Criar um método que trate o erro no controller
 //TODO - Adicionar documentação nos métodos e nas rotas e criar uma pagina de documentação
 //TODO - criar um README completo com as informações necessárias para subir a aplicação
@@ -58,6 +58,7 @@ public class VillagerController {
         return villagerService.filterByAge(age);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public VillagerDetailResponseDTO store(@RequestBody CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
         return villagerService.create(createVillagerRequestDTO);

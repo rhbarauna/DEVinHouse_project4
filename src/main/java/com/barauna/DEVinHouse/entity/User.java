@@ -1,7 +1,6 @@
 package com.barauna.DEVinHouse.entity;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class User {
@@ -9,12 +8,6 @@ public class User {
     private String login;
     private String password;
     private Set<String> roles = new HashSet<>();
-
-//    public User(String login, String password) {
-//        Set<String> roles = new HashSet<>();
-//        roles.add("USER");
-//        this(login, password, roles);
-//    }
 
     public User(String login, String password, Set<String> roles) {
         this.login = login;
