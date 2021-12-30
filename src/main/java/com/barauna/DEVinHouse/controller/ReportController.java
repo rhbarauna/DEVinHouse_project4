@@ -11,11 +11,11 @@ import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/report")
-public class VillageReportController {
+public class ReportController {
 
     private final ReportService reportService;
 
-    public VillageReportController(ReportService reportService) {
+    public ReportController(ReportService reportService) {
         this.reportService = reportService;
     }
 

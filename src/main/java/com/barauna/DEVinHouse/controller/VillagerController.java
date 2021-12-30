@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-//TODO - acertar a parte de websecurity - roles
 //TODO - validar createVillagerrequestDTO
 //TODO - create a custom date serializer https://www.baeldung.com/jackson-serialize-dates
 //TODO - Criar tabela de usuario no banco

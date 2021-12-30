@@ -11,8 +11,8 @@ public class UserRepository {
 
     public UserRepository() {
         this.users.addAll(Arrays.asList(
-                new User("rhbarauna@powerkitchen.ca", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("ROLE_ADMIN")),
-                new User("rhbarauna@gmail.com", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("ROLE_USER"))
+                new User("rhbarauna@powerkitchen.ca", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("ADMIN")),
+                new User("rhbarauna@gmail.com", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("USER"))
         ));
     }
 

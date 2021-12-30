@@ -26,7 +26,7 @@ public class UserDetailsImpl implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities.stream()
-                .map(SimpleGrantedAuthority::new)
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.replaceAll("ROLE_", "")))
                 .collect(Collectors.toSet());
     }
     @Override
