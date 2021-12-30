@@ -11,9 +11,15 @@ public class UserRepository {
 
     public UserRepository() {
         this.users.addAll(Arrays.asList(
-                new User("rhbarauna@powerkitchen.ca", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("ADMIN")),
-                new User("rhbarauna@gmail.com", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("USER"))
+                new User("rhbarauna@powerkitchen.ca", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("ADMIN"), 1L),
+                new User("rhbarauna@gmail.com", "$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm", Set.of("USER"), 2L)
         ));
+    }
+
+    public User store (Long villagerId, String login, String password) {
+        final User user = new User(login, password, Set.of("USER"), villagerId);
+        this.users.add(user);
+        return user;
     }
 
     public User getByUsername(String username) {

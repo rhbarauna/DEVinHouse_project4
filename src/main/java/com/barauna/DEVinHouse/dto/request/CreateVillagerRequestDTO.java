@@ -7,18 +7,13 @@ import java.time.LocalDate;
 public class CreateVillagerRequestDTO {
 
     private String name;
-
-
     private String surName;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
-
-//    @NotEmpty
-//    @Pattern(regexp="\\^([0-9]{3}\\.?){3}-?[0-9]{2}\\$")
     private String document;
-
     private Float wage;
+    private String email;
+    private String password;
 
     public String getName() {
         return name;
@@ -34,5 +29,11 @@ public class CreateVillagerRequestDTO {
     }
     public Float getWage() {
         return wage;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getPassword() {
+        return password;
     }
 }

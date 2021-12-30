@@ -4,7 +4,6 @@ import com.barauna.DEVinHouse.security.filters.JWTAuthenticationFilter;
 import com.barauna.DEVinHouse.security.filters.JWTAuthorizationFilter;
 import com.barauna.DEVinHouse.service.UserDetailsServiceImpl;
 import com.barauna.DEVinHouse.utils.JWTTokenUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -26,17 +24,19 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_MATCHERS_POST = { "/login/**" };
     private final JWTTokenUtils jwtTokenUtils;
     private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public WebSecurityConfigAdapter(JWTTokenUtils jwtUtil, UserDetailsServiceImpl userDetailsService){
+    public WebSecurityConfigAdapter(JWTTokenUtils jwtUtil, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder){
         this.jwtTokenUtils = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .userDetailsService(userDetailsService)
-            .passwordEncoder(getPasswordEncoder());
+            .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -62,20 +62,4 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         super.configure(web);
     }
-
-
-
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-//        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }

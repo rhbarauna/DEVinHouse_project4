@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
-    private String ROLE_PREFIX = "ROLE_";
 
     public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;

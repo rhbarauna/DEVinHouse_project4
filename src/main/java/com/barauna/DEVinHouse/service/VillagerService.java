@@ -6,7 +6,7 @@ import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
 import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.database.repository.VillagerRepository;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
-import com.barauna.DEVinHouse.utils.StringUtils;
+import com.barauna.DEVinHouse.utils.VillagerUtils;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -18,9 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class VillagerService {
     private final VillagerRepository villagerRepository;
+    private final UserService userService;
 
-    public VillagerService(VillagerRepository villagerRepository) {
+    public VillagerService(VillagerRepository villagerRepository, UserService userService) {
         this.villagerRepository = villagerRepository;
+        this.userService = userService;
     }
 
     public List<Villager> getVillagers() throws SQLException {
@@ -59,9 +61,23 @@ public class VillagerService {
     }
 
     public VillagerDetailResponseDTO create(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
-//        validate(createVillagerRequestDTO);
+        validate(createVillagerRequestDTO);
 
-        final Villager newVillager = villagerRepository.store(createVillagerRequestDTO.getName(), createVillagerRequestDTO.getSurName(), createVillagerRequestDTO.getBirthday(), createVillagerRequestDTO.getDocument(), createVillagerRequestDTO.getWage());
+        final Villager newVillager = villagerRepository.store(
+            createVillagerRequestDTO.getName(),
+            createVillagerRequestDTO.getSurName(),
+            createVillagerRequestDTO.getBirthday(),
+            createVillagerRequestDTO.getDocument(),
+            createVillagerRequestDTO.getWage()
+        );
+
+        try {
+            userService.store(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword());
+        } catch(Exception e) {
+            this.delete(newVillager.getId());
+            throw e;
+        }
+
         return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage());
     }
 
@@ -74,16 +90,16 @@ public class VillagerService {
     }
 
     private void validate(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
-        if(!StringUtils.validateCPF(createVillagerRequestDTO.getDocument())) {
-            throw new InvalidVillagerDataException("Invalid CPF value.");
+        if(!VillagerUtils.isValidCPF(createVillagerRequestDTO.getDocument())) {
+            throw new InvalidVillagerDataException("Invalid CPF.");
         }
 
-        if(!StringUtils.validateName(createVillagerRequestDTO.getName()) || !createVillagerRequestDTO.getName().trim().isEmpty()) {
-            throw new InvalidVillagerDataException("Invalid name value. Cannot be only spaces nor contain number.");
+        if(!VillagerUtils.isValidName(createVillagerRequestDTO.getName())) {
+            throw new InvalidVillagerDataException("Invalid name. Cannot be only spaces nor contain number.");
         }
 
-        if(!StringUtils.validateName(createVillagerRequestDTO.getSurName()) || !createVillagerRequestDTO.getSurName().trim().isEmpty()) {
-            throw new InvalidVillagerDataException("Invalid surname value. Cannot be only spaces nor contain number.");
+        if(!VillagerUtils.isValidName(createVillagerRequestDTO.getSurName())) {
+            throw new InvalidVillagerDataException("Invalid surname. Cannot be only spaces nor contain number.");
         }
 
         if(createVillagerRequestDTO.getWage() < 0) {

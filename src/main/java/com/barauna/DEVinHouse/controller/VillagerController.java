@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-//TODO - validar createVillagerrequestDTO
-//TODO - create a custom date serializer https://www.baeldung.com/jackson-serialize-dates
+//TODO - Validar dados de cadastro do villager juntamente com usuário (já que todo villager poderá logar, é necessário que informe um email e uma senha)
 //TODO - Criar tabela de usuario no banco
 //TODO - Fazer com que os villagers tenham usuário
 //TODO - Criar um método que trate o erro no controller
@@ -19,8 +18,6 @@ import java.util.List;
 //TODO - criar um README completo com as informações necessárias para subir a aplicação
 //TODO - adicionar flyway https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/howto-database-initialization.html
 //TODO - criar testes unitários para praticar.
-//TODO - Não permitir cadastro com valores inválidos para o habitante
-//TODO - lançar exceção de notfound quando buscar por id e nao achar nenhum?
 
 @RestController
 @RequestMapping("/villager")
