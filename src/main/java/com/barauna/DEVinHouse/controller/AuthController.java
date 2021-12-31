@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/forgot")
-    public ResponseEntity<Void> forgot(@RequestBody MailRequestDTO mail){
+    public ResponseEntity<Void> forgot(@RequestBody MailRequestDTO mail) throws Exception{
         authService.sendNewPass(mail.getEmail());
         return ResponseEntity.noContent().build();
     }

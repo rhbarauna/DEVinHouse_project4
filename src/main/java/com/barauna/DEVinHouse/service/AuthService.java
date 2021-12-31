@@ -6,6 +6,8 @@ import com.barauna.DEVinHouse.utils.PasswordUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
 
@@ -25,11 +27,12 @@ public class AuthService {
         return this.userDetailsService.authenticated();
     }
 
-    public void sendNewPass(String email)  {
-        User user = userService.getUser(email);
-        if(user == null) {
+    public void sendNewPass(String email) throws Exception {
+        Optional<User> userOPT = userService.getUser(email);
+        if(userOPT.isEmpty()) {
             throw new RuntimeException("Email not found.");
         }
+        User user = userOPT.get();
         String newPass = new String(PasswordUtils.generatePassword(12));
         String encodePass = passwordEncoder.encode(newPass);
         user.setPassword(encodePass);

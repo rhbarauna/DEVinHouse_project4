@@ -1,24 +1,36 @@
 package com.barauna.DEVinHouse.entity;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class User {
 
-    private String login;
+    private Long id;
+    private String email;
     private String password;
-    private Set<String> roles = new HashSet<>();
+    private Set<String> roles;
     private Long villagerId;
 
-    public User(String login, String password, Set<String> roles, Long villagerId) {
-        this.login = login;
+    public User(String email, String password, Set<String> roles, Long villagerId) {
+        this.email = email;
         this.password = password;
-        this.roles.addAll(roles);
+        this.roles= roles;
         this.villagerId = villagerId;
     }
 
-    public String getLogin() {
-        return login;
+    public User(Long id, Long villagerId, String email, String password, Set<String> roles) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.villagerId = villagerId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
@@ -29,8 +41,8 @@ public class User {
         return roles;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPassword(String password) {

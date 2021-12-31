@@ -7,6 +7,10 @@ import com.barauna.DEVinHouse.utils.UserUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
 @Service
 public class UserService {
     private final UserRepository repository;
@@ -17,19 +21,26 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User store(Long id, String username, String password) throws Exception {
-        validate(id, username, password);
+    public User store(Long id, String email, String password) throws Exception {
+        Set<String> roles = new HashSet<>();
+        roles.add("USER");
+
+        return store(id, email, password, roles);
+    }
+
+    public User store(Long id, String email, String password, Set<String> roles) throws Exception {
+        validate(id, email, password);
 
         String maskedPassword = passwordEncoder.encode(password);
-        return this.repository.store(id, username, maskedPassword);
+        return repository.store(id, email, maskedPassword, roles);
     }
 
-    public User getUser(String username) {
-        return repository.getByUsername(username);
+    public Optional<User> getUser(String username) throws Exception {
+        return repository.getByLogin(username);
     }
 
-    public void updateUser(User user) {
-        repository.update(user);
+    public void updateUser(User user) throws Exception {
+        repository.updatePassword(user.getId(), user.getPassword());
     }
 
     private void validate(Long id, String username, String password) throws Exception {

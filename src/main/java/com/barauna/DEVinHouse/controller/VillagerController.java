@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-//TODO - Validar dados de cadastro do villager juntamente com usuário (já que todo villager poderá logar, é necessário que informe um email e uma senha)
-//TODO - Criar tabela de usuario no banco
-//TODO - Fazer com que os villagers tenham usuário
+//TODO - conectar o repositorio de usuario ao banco e testar a inserção de dados
+//TODO - padronizar o usuario com email no lugar de login
+//TODO - Mapear a lista de dados da tabela users para a entidade user
 //TODO - Criar um método que trate o erro no controller
 //TODO - Adicionar documentação nos métodos e nas rotas e criar uma pagina de documentação
 //TODO - criar um README completo com as informações necessárias para subir a aplicação
