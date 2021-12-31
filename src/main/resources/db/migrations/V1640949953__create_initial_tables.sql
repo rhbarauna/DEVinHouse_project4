@@ -24,5 +24,5 @@ CREATE TABLE users (
 INSERT INTO villagers (name, surname, document, birthday, wage) VALUES('Rhenato', 'Barauna ADMIN', '100.000.000-00', '1985-07-10', 100);
 INSERT INTO villagers (name, surname, document, birthday, wage) VALUES('Rhenato', 'Barauna USER', '200.000.000-00', '1985-07-11', 200);
 
-INSERT INTO users (villager_id, email, password) VALUES(1, 'rhbarauna@powerKitchen.ca', '$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm', '{ADMIN}');
+INSERT INTO users (villager_id, email, password, roles) VALUES(1, 'rhbarauna@powerkitchen.ca', '$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm', '{ADMIN}');
 INSERT INTO users (villager_id, email, password) VALUES(2, 'rhbarauna@gmail.com', '$2a$10$vdzLTE.f4hUuo1sseEJnzO8hJim0.2UnBnqpDhI.xTqVvFAD68FSm');

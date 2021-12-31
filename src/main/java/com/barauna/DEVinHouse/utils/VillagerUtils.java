@@ -20,7 +20,7 @@ public class VillagerUtils {
             return false;
         }
 
-        final Pattern pattern = Pattern.compile("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
+        final Pattern pattern = Pattern.compile("^[A-Za-zÀ-ÖØ-öø-ÿ]+(([',. -][A-Za-zÀ-ÖØ-öø-ÿ ])?[A-Za-zÀ-ÖØ-öø-ÿ]*)*$");
         return pattern.matcher(name).matches();
     }
 }

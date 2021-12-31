@@ -23,7 +23,7 @@ public class UserRepository {
 
     public User store (Long villagerId, String email, String password, Set<String> roles) throws SQLException {
         final User user = new User(email, password, Set.of("USER"), villagerId);
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (villager_id, username, password, roles) VALUES(?, ?, ?, ?)",
+        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (villager_id, email, password, roles) VALUES(?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
             final Array rolesArr = dbConnection.createArrayOf("VARCHAR", roles.toArray());
 
