@@ -46,4 +46,10 @@ public class UserRoleRepository {
 
         return userRoles;
     }
+
+    public void deleteByUserId(Long userId) throws SQLException {
+        PreparedStatement pStmt = dbConnection.prepareStatement("DELETE FROM " + TABLE_NAME + " where user_id = ?");
+        pStmt.setLong(1, userId);
+        pStmt.execute();
+    }
 }

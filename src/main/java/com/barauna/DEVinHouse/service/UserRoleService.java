@@ -57,4 +57,8 @@ public class UserRoleService {
             ).collect(Collectors.toSet())
         ;
     }
+
+    public void deleteByUserId(Long userId) throws Exception {
+        repository.deleteByUserId(userId);
+    }
 }

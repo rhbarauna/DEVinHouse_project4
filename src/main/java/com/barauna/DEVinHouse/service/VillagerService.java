@@ -84,7 +84,8 @@ public class VillagerService {
         }
     }
 
-    public void delete(Long villagerId) throws SQLException {
+    public void delete(Long villagerId) throws Exception {
+        userService.deleteByVillagerId(villagerId);
         villagerRepository.delete(villagerId);
     }
 

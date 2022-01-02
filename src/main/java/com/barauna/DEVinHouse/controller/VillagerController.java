@@ -58,7 +58,7 @@ public class VillagerController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long villagerId) throws SQLException {
+    public void delete(@PathVariable("id") Long villagerId) throws Exception {
         villagerService.delete(villagerId);
     }
 }

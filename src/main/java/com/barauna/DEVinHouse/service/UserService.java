@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class UserService {
             this.delete(newUser.getId());
             throw e;
         }
-        return new UserTO(newUser.getEmail(), newUser.getPassword(), newUser.getVillagerId(), roles);
+        return new UserTO(newUser.getId(), newUser.getEmail(), newUser.getPassword(), newUser.getVillagerId(), roles);
     }
 
     public void delete(Long id) throws Exception {
@@ -55,7 +56,7 @@ public class UserService {
 
         Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
 
-        return new UserTO(user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
+        return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
     }
 
     public UserTO getByVillagerId(Long villagerId) throws Exception {
@@ -63,7 +64,7 @@ public class UserService {
 
         Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
 
-        return new UserTO(user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
+        return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
     }
 
     public void updatePassword(String email, String newPassword) throws Exception {
@@ -88,5 +89,11 @@ public class UserService {
                     "● 1+ Special character\n" +
                     "● 1+ Number\n");
         }
+    }
+
+    public void deleteByVillagerId(Long villagerId) throws Exception {
+        final UserTO userTO = this.getByVillagerId(villagerId);
+        userRoleService.deleteByUserId(userTO.getUserId());
+        repository.delete(villagerId);
     }
 }
