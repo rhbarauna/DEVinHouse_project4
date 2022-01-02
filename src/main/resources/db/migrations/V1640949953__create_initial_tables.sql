@@ -18,7 +18,6 @@ CREATE TABLE "user" (
                         villager_id BIGINT NOT NULL UNIQUE,
                         email VARCHAR(60) NOT NULL UNIQUE,
                         password VARCHAR(60) NOT NULL,
-                        roles VARCHAR[3] NOT NULL DEFAULT '{USER}',
                         CONSTRAINT user_table_villager_fk
                             FOREIGN KEY (villager_id)
                                 REFERENCES villager (id)
