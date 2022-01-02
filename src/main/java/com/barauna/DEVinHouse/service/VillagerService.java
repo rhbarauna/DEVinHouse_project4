@@ -41,7 +41,10 @@ public class VillagerService {
         Villager villager = result.get();
         UserTO userTO = userService.getByVillagerId(villagerId);
 
-        return new VillagerDetailResponseDTO(villager.getName(), villager.getSurName(), villager.getBirthday(), villager.getDocument(), villager.getWage(), userTO.getEmail(), new ArrayList<>(userTO.getRoles()));
+        return new VillagerDetailResponseDTO(
+                villager.getName(), villager.getSurName(),
+                villager.getBirthday(), villager.getDocument(), villager.getWage(),
+                userTO.getEmail(), new ArrayList<>(userTO.getRoles()));
     }
 
     public List<FilterVillagerResponseDTO> getAll() throws SQLException {
