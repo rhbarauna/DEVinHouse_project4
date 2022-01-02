@@ -11,23 +11,52 @@ As rotas disponíveis bem como o timpo de entrada e saída de dados está descri
 ### Autenticação
 POST  - /login
 
-Rota responsável por autenticar o usuário retornando e retornar o token JWT necessário para autenticações futuras
+Autenticação do usuário retornando o token JWT necessário para autenticações futuras
 
 POST - /auth/forgot
 
+Recuperação/geração de nova senha  que é enviada para diretamente para o email do usuáriop
+
+
 POST - /auth/refresh_token
+
+Revalidação do token existente gerando um novo token.
+
 
 ### Moradores
 GET - /villager
+Listagem de moradores
+
 GET - /villager/{id}
+
+Detalhes de um morador
+
 GET - /villager/name?name=
+
+Listagem de moradores filtrado por nome
+
 GET - /villager/birth?month=JANUARY
+
+Listagem de moradores filtrado por mês de aniversário
+
 GET - /villager/age/{age}
+
+Listagem de moradores filtrado por idade
+
 POST - /create
+
+Criação de usuário.
+
+
 DELETE - /
+
+Deleção de usuário.
 
 ### Relatório da vila
 GET - /report/generate
+
+Geração de relatório da fila.
+
 
 
 Na raiz do projeto temos o PDF brModeloWeb.pdf demonstrando nossa estrutura de banco.
