@@ -20,7 +20,6 @@ public class UserRoleService {
     }
 
     public void create(Long userId, Set<String> roles) throws Exception {
-        //TODO - validate roles content to be USER or ADMIN and uppercase to consult or ignore case
         List<Long> rolesIds = roleService.getByNames(roles).stream().map(Role::getId).collect(Collectors.toList());
 
         if(rolesIds.isEmpty()) {

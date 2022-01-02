@@ -24,14 +24,14 @@ public class UserService {
         this.userRoleService = userRoleService;
     }
 
-    public User create(Long id, String email, String password) throws Exception {
+    public UserTO create(Long id, String email, String password) throws Exception {
         Set<String> roles = new HashSet<>();
         roles.add("USER");
 
         return create(id, email, password, roles);
     }
 
-    public User create(Long id, String email, String password, Set<String> roles) throws Exception {
+    public UserTO create(Long id, String email, String password, Set<String> roles) throws Exception {
         validate(id, email, password);
 
         String maskedPassword = passwordEncoder.encode(password);
@@ -43,8 +43,7 @@ public class UserService {
             this.delete(newUser.getId());
             throw e;
         }
-
-        return newUser;
+        return new UserTO(newUser.getEmail(), newUser.getPassword(), newUser.getVillagerId(), roles);
     }
 
     public void delete(Long id) throws Exception {
@@ -53,6 +52,14 @@ public class UserService {
 
     public UserTO getUser(String email) throws Exception {
         final User user = repository.getByEmail(email).orElseThrow();
+
+        Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
+
+        return new UserTO(user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
+    }
+
+    public UserTO getByVillagerId(Long villagerId) throws Exception {
+        final User user = repository.getByVillagerId(villagerId).orElseThrow();
 
         Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
 

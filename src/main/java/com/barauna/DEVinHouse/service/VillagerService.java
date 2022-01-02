@@ -6,11 +6,13 @@ import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
 import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.database.repository.VillagerRepository;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
+import com.barauna.DEVinHouse.to.UserTO;
 import com.barauna.DEVinHouse.utils.VillagerUtils;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class VillagerService {
         return villagerRepository.all();
     }
 
-    public VillagerDetailResponseDTO getById(Long villagerId)  throws SQLException {
+    public VillagerDetailResponseDTO getById(Long villagerId) throws Exception {
         Optional<Villager> result = villagerRepository.find(villagerId);
 
         if(result.isEmpty()) {
@@ -37,7 +39,9 @@ public class VillagerService {
         }
 
         Villager villager = result.get();
-        return new VillagerDetailResponseDTO(villager.getName(), villager.getSurName(), villager.getBirthday(), villager.getDocument(), villager.getWage());
+        UserTO userTO = userService.getByVillagerId(villagerId);
+
+        return new VillagerDetailResponseDTO(villager.getName(), villager.getSurName(), villager.getBirthday(), villager.getDocument(), villager.getWage(), userTO.getEmail(), new ArrayList<>(userTO.getRoles()));
     }
 
     public List<FilterVillagerResponseDTO> getAll() throws SQLException {
@@ -72,13 +76,12 @@ public class VillagerService {
         );
 
         try {
-            userService.create(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword());
+            UserTO userTO = userService.create(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword());
+            return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), userTO.getEmail(), new ArrayList(userTO.getRoles()));
         } catch(Exception e) {
             this.delete(newVillager.getId());
             throw e;
         }
-
-        return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage());
     }
 
     public void delete(Long villagerId) throws SQLException {

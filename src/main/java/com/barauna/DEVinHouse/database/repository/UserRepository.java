@@ -59,6 +59,27 @@ public class UserRepository {
         return Optional.ofNullable(user);
     }
 
+    public Optional<User> getByVillagerId(Long villagerId) throws SQLException {
+        PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE villager_id = ?");
+        pStmt.setLong(1, villagerId);
+        pStmt.execute();
+
+        ResultSet resultSet = pStmt.getResultSet();
+
+        User user = null;
+        while (resultSet.next()) {
+
+            user = new User(
+                    resultSet.getLong("id"),
+                    resultSet.getLong("villager_id"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password")
+            );
+        }
+
+        return Optional.ofNullable(user);
+    }
+
     public void updatePassword(Long userId, String newPassword) throws SQLException{
         PreparedStatement pStmt = dbConnection.prepareStatement("UPDATE " + TABLE_NAME + " SET password = ? WHERE id = ?");
         pStmt.setString(1, newPassword);

@@ -27,7 +27,7 @@ public class VillagerController {
     }
 
     @GetMapping("/{id}")
-    public VillagerDetailResponseDTO getById(@PathVariable("id") Long villagerId) throws SQLException {
+    public VillagerDetailResponseDTO getById(@PathVariable("id") Long villagerId) throws Exception {
         return villagerService.getById(villagerId);
     }
 

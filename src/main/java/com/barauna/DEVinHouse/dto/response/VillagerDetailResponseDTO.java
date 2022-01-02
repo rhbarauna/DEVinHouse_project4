@@ -1,6 +1,7 @@
 package com.barauna.DEVinHouse.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class VillagerDetailResponseDTO {
     private String name;
@@ -8,13 +9,17 @@ public class VillagerDetailResponseDTO {
     private LocalDate birthday;
     private String document;
     private Float wage;
+    private String email;
+    private List<String> roles;
 
-    public VillagerDetailResponseDTO(String name, String surName, LocalDate birthday, String document, Float wage) {
+    public VillagerDetailResponseDTO(String name, String surName, LocalDate birthday, String document, Float wage, String email, List<String> roles) {
         this.name = name;
         this.surName = surName;
         this.birthday = birthday;
         this.document = document;
         this.wage = wage;
+        this.email = email;
+        this.roles = roles;
     }
 
     public String getName() {
@@ -55,5 +60,21 @@ public class VillagerDetailResponseDTO {
 
     public void setWage(Float wage) {
         this.wage = wage;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
