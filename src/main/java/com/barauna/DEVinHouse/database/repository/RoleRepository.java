@@ -23,7 +23,7 @@ public class RoleRepository {
     }
 
     public Optional<Role> find(Long roleId) throws SQLException {
-    PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE id = ?");
+        PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE id = ?");
         pStmt.setLong(1, roleId);
         pStmt.execute();
 

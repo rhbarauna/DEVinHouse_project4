@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 @Configuration
 public class DBConnectionFactory {
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public DBConnectionFactory(
             @Value("${jdbc.db.url}") String url,

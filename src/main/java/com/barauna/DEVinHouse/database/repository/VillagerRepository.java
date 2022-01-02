@@ -23,72 +23,68 @@ public class VillagerRepository {
     }
 
     public List<Villager> all() throws SQLException {
-        try (Statement stmt = dbConnection.createStatement()) {
-            stmt.execute("SELECT * FROM " + TABLE_NAME);
+        Statement stmt = dbConnection.createStatement();
+        stmt.execute("SELECT * FROM " + TABLE_NAME);
 
-            ResultSet resultSet = stmt.getResultSet();
-            List<Villager> villagers = new ArrayList<>();
-            while (resultSet.next()) {
-                final Villager villager = new Villager(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("surname"),
-                        resultSet.getString("document"),
-                        resultSet.getDate("birthday").toLocalDate(),
-                        resultSet.getFloat("wage")
-                );
-                villagers.add(villager);
-            }
-            return villagers;
-        }
-    }
-
-    public Optional<Villager> find(Long villagerId) throws SQLException {
-
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE id = ?")) {
-            pStmt.setLong(1, villagerId);
-            pStmt.execute();
-
-            ResultSet resultSet = pStmt.getResultSet();
-
-            Villager villager = null;
-
-            while (resultSet.next()) {
-                villager = new Villager(
+        ResultSet resultSet = stmt.getResultSet();
+        List<Villager> villagers = new ArrayList<>();
+        while (resultSet.next()) {
+            final Villager villager = new Villager(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("surname"),
                     resultSet.getString("document"),
                     resultSet.getDate("birthday").toLocalDate(),
                     resultSet.getFloat("wage")
-                );
-            }
-
-            return Optional.ofNullable(villager);
+            );
+            villagers.add(villager);
         }
+        return villagers;
+    }
+
+    public Optional<Villager> find(Long villagerId) throws SQLException {
+        PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE id = ?");
+        pStmt.setLong(1, villagerId);
+        pStmt.execute();
+
+        ResultSet resultSet = pStmt.getResultSet();
+
+        Villager villager = null;
+
+        while (resultSet.next()) {
+            villager = new Villager(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("surname"),
+                resultSet.getString("document"),
+                resultSet.getDate("birthday").toLocalDate(),
+                resultSet.getFloat("wage")
+            );
+        }
+
+        return Optional.ofNullable(villager);
     }
 
     public List<Villager> getByName(String villagerName) throws SQLException {
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE name ilike ?")) {
-            pStmt.setString(1, "%"+villagerName+"%");
-            pStmt.execute();
+        PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE name ilike ?");
+        pStmt.setString(1, "%"+villagerName+"%");
+        pStmt.execute();
 
-            ResultSet resultSet = pStmt.getResultSet();
+        ResultSet resultSet = pStmt.getResultSet();
 
-            List<Villager> villagers = new ArrayList<>();
-            while (resultSet.next()) {
-                final Villager villager = new Villager(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("surname"),
-                        resultSet.getString("document"),
-                        resultSet.getDate("birthday").toLocalDate(),
-                        resultSet.getFloat("wage")
-                );
-                villagers.add(villager);
-            }
-            return villagers;
+        List<Villager> villagers = new ArrayList<>();
+        while (resultSet.next()) {
+            final Villager villager = new Villager(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("surname"),
+                    resultSet.getString("document"),
+                    resultSet.getDate("birthday").toLocalDate(),
+                    resultSet.getFloat("wage")
+            );
+            villagers.add(villager);
         }
+        return villagers;
     }
 
     public List<Villager> getByBirthMonth(String villagerBirthMonth) throws SQLException {
@@ -106,35 +102,33 @@ public class VillagerRepository {
     }
 
     public void delete(Long villagerId) throws SQLException {
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE id = ?")) {
-            pStmt.setLong(1, villagerId);
-            pStmt.execute();
-        }
+        PreparedStatement pStmt = dbConnection.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE id = ?");
+        pStmt.setLong(1, villagerId);
+        pStmt.execute();
     }
 
     public Villager store(String name, String surName, LocalDate birthday, String document, Float wage) throws SQLException {
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (name, surname, document, birthday, wage) VALUES(?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS)) {
-            pStmt.setString(1, name);
-            pStmt.setString(2, surName);
-            pStmt.setString(3, document);
-            pStmt.setDate(4, Date.valueOf(birthday));
-            pStmt.setFloat(5, wage);
-            pStmt.execute();
+        PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (name, surname, document, birthday, wage) VALUES(?, ?, ?, ?, ?)",
+            Statement.RETURN_GENERATED_KEYS);
+        pStmt.setString(1, name);
+        pStmt.setString(2, surName);
+        pStmt.setString(3, document);
+        pStmt.setDate(4, Date.valueOf(birthday));
+        pStmt.setFloat(5, wage);
+        pStmt.execute();
 
-            ResultSet resultSet = pStmt.getGeneratedKeys();
-            Villager newVillager = null;
-            while (resultSet.next()) {
-                newVillager = new Villager(
-                        resultSet.getLong(1),
-                        name.trim(),
-                        surName.trim(),
-                        document,
-                        birthday,
-                        wage
-                );
-            }
-            return newVillager;
+        ResultSet resultSet = pStmt.getGeneratedKeys();
+        Villager newVillager = null;
+        while (resultSet.next()) {
+            newVillager = new Villager(
+                    resultSet.getLong(1),
+                    name.trim(),
+                    surName.trim(),
+                    document,
+                    birthday,
+                    wage
+            );
         }
+        return newVillager;
     }
 }
