@@ -9,7 +9,7 @@ public class CreateVillagerRequestDTO {
 
     private String name;
     private String surName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
     private String document;
     private Float wage;
