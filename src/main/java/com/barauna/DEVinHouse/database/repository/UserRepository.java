@@ -1,36 +1,28 @@
 package com.barauna.DEVinHouse.database.repository;
 
 import com.barauna.DEVinHouse.entity.User;
-import com.barauna.DEVinHouse.entity.Villager;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
 
-    private final String TABLE_NAME = "users";
+    private final String TABLE_NAME = "\"user\"";
     private final Connection dbConnection;
 
     public UserRepository(Connection connection) {
         this.dbConnection = connection;
     }
 
-    public User store (Long villagerId, String email, String password, Set<String> roles) throws SQLException {
-        final User user = new User(email, password, Set.of("USER"), villagerId);
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (villager_id, email, password, roles) VALUES(?, ?, ?, ?)",
+    public User store (Long villagerId, String email, String password) throws SQLException {
+        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (villager_id, email, password) VALUES(?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
-            final Array rolesArr = dbConnection.createArrayOf("VARCHAR", roles.toArray());
 
             pStmt.setLong(1, villagerId);
             pStmt.setString(2, email);
             pStmt.setString(3, password);
-            pStmt.setArray(4, rolesArr);
             pStmt.execute();
 
             ResultSet resultSet = pStmt.getGeneratedKeys();
@@ -40,14 +32,13 @@ public class UserRepository {
                         resultSet.getLong("id"),
                         villagerId,
                         email,
-                        password,
-                        roles);
+                        password);
             }
             return newUser;
         }
     }
 
-    public Optional<User> getByLogin(String email) throws SQLException {
+    public Optional<User> getByEmail(String email) throws SQLException {
         try (PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE email = ?")) {
             pStmt.setString(1, email);
             pStmt.execute();
@@ -56,14 +47,12 @@ public class UserRepository {
 
             User user = null;
             while (resultSet.next()) {
-                final String[] stringsArr = (String[]) resultSet.getArray("roles").getArray();
 
                 user = new User(
                     resultSet.getLong("id"),
                     resultSet.getLong("villager_id"),
                     resultSet.getString("email"),
-                    resultSet.getString("password"),
-                    Arrays.stream(stringsArr).collect(Collectors.toSet())
+                    resultSet.getString("password")
                 );
             }
 
@@ -73,8 +62,8 @@ public class UserRepository {
 
     public void updatePassword(Long userId, String newPassword) throws SQLException{
         try (PreparedStatement pStmt = dbConnection.prepareStatement("UPDATE " + TABLE_NAME + " SET password = ? WHERE id = ?")) {
-            pStmt.setLong(1, userId);
-            pStmt.setString(2, newPassword);
+            pStmt.setString(1, newPassword);
+            pStmt.setLong(2, userId);
             pStmt.execute();
         }
     }

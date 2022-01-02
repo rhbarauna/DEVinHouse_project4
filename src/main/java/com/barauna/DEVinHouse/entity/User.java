@@ -7,21 +7,18 @@ public class User {
     private Long id;
     private String email;
     private String password;
-    private Set<String> roles;
     private Long villagerId;
 
-    public User(String email, String password, Set<String> roles, Long villagerId) {
+    public User(String email, String password, Long villagerId) {
         this.email = email;
         this.password = password;
-        this.roles= roles;
         this.villagerId = villagerId;
     }
 
-    public User(Long id, Long villagerId, String email, String password, Set<String> roles) {
+    public User(Long id, Long villagerId, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.roles = roles;
         this.villagerId = villagerId;
     }
 
@@ -37,20 +34,12 @@ public class User {
         return password;
     }
 
-    public Set<String> getRoles() {
-        return roles;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
     }
 
     public Long getVillagerId() {

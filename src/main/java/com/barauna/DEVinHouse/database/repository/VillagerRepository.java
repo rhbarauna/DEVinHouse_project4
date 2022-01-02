@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class VillagerRepository {
-    private static final String TABLE_NAME = "villagers";
+    private static final String TABLE_NAME = "villager";
     private final Connection dbConnection;
 
     public VillagerRepository(Connection connection) {
@@ -113,7 +113,7 @@ public class VillagerRepository {
     }
 
     public Villager store(String name, String surName, LocalDate birthday, String document, Float wage) throws SQLException {
-        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO villagers (name, surname, document, birthday, wage) VALUES(?, ?, ?, ?, ?)",
+        try (PreparedStatement pStmt = dbConnection.prepareStatement("INSERT INTO " + TABLE_NAME + " (name, surname, document, birthday, wage) VALUES(?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
             pStmt.setString(1, name);
             pStmt.setString(2, surName);

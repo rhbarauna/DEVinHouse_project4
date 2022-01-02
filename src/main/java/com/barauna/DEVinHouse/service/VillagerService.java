@@ -72,7 +72,7 @@ public class VillagerService {
         );
 
         try {
-            userService.store(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword());
+            userService.create(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword());
         } catch(Exception e) {
             this.delete(newVillager.getId());
             throw e;

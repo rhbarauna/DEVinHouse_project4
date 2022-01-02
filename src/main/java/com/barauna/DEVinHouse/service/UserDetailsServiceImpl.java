@@ -2,6 +2,7 @@ package com.barauna.DEVinHouse.service;
 
 import com.barauna.DEVinHouse.entity.User;
 import com.barauna.DEVinHouse.security.UserDetailsImpl;
+import com.barauna.DEVinHouse.to.UserTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            final User user = userService.getUser(username).orElseThrow();
+            final UserTO user = userService.getUser(username);
             return new UserDetailsImpl(user.getEmail(), user.getPassword(), user.getRoles());
         } catch (Exception e) {
             throw new UsernameNotFoundException(e.getMessage());

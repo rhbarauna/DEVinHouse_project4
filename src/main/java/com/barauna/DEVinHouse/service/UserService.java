@@ -3,44 +3,65 @@ package com.barauna.DEVinHouse.service;
 import com.barauna.DEVinHouse.database.repository.UserRepository;
 import com.barauna.DEVinHouse.entity.User;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
+import com.barauna.DEVinHouse.to.UserTO;
 import com.barauna.DEVinHouse.utils.UserUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRoleService userRoleService;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, UserRoleService userRoleService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.userRoleService = userRoleService;
     }
 
-    public User store(Long id, String email, String password) throws Exception {
+    public User create(Long id, String email, String password) throws Exception {
         Set<String> roles = new HashSet<>();
         roles.add("USER");
 
-        return store(id, email, password, roles);
+        return create(id, email, password, roles);
     }
 
-    public User store(Long id, String email, String password, Set<String> roles) throws Exception {
+    public User create(Long id, String email, String password, Set<String> roles) throws Exception {
         validate(id, email, password);
 
         String maskedPassword = passwordEncoder.encode(password);
-        return repository.store(id, email, maskedPassword, roles);
+        final User newUser = repository.store(id, email, maskedPassword);
+
+        try {
+            userRoleService.create(newUser.getId(), roles);
+        } catch(Exception e) {
+            this.delete(newUser.getId());
+            throw e;
+        }
+
+        return newUser;
     }
 
-    public Optional<User> getUser(String username) throws Exception {
-        return repository.getByLogin(username);
+    public void delete(Long id) throws Exception {
+        repository.delete(id);
     }
 
-    public void updateUser(User user) throws Exception {
-        repository.updatePassword(user.getId(), user.getPassword());
+    public UserTO getUser(String email) throws Exception {
+        final User user = repository.getByEmail(email).orElseThrow();
+
+        Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
+
+        return new UserTO(user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
+    }
+
+    public void updatePassword(String email, String newPassword) throws Exception {
+        final User user = repository.getByEmail(email).orElseThrow();
+        repository.updatePassword(user.getId(), newPassword);
     }
 
     private void validate(Long id, String username, String password) throws Exception {

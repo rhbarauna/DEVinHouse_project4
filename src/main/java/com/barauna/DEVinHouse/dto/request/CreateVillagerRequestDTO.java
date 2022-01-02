@@ -3,6 +3,7 @@ package com.barauna.DEVinHouse.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CreateVillagerRequestDTO {
 
@@ -14,6 +15,8 @@ public class CreateVillagerRequestDTO {
     private Float wage;
     private String email;
     private String password;
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
+    private List<String> roles;
 
     public String getName() {
         return name;
@@ -35,5 +38,9 @@ public class CreateVillagerRequestDTO {
     }
     public String getPassword() {
         return password;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 }

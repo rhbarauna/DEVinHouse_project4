@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-//TODO - conectar o repositorio de usuario ao banco e testar a inserção de dados
-//TODO - padronizar o usuario com email no lugar de login
-//TODO - Mapear a lista de dados da tabela users para a entidade user
+
 //TODO - Criar um método que trate o erro no controller
 //TODO - Adicionar documentação nos métodos e nas rotas e criar uma pagina de documentação
 //TODO - criar um README completo com as informações necessárias para subir a aplicação
 //TODO - adicionar flyway https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/howto-database-initialization.html
-//TODO - criar testes unitários para praticar.
 
 @RestController
 @RequestMapping("/villager")
