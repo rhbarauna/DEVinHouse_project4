@@ -10,12 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-
-//TODO - Criar um método que trate o erro no controller
-//TODO - Adicionar documentação nos métodos e nas rotas e criar uma pagina de documentação
-//TODO - criar um README completo com as informações necessárias para subir a aplicação
-//TODO - adicionar flyway https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/howto-database-initialization.html
-
 @RestController
 @RequestMapping("/villager")
 public class VillagerController {
