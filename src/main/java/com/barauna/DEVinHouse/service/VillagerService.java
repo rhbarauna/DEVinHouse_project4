@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,8 +77,8 @@ public class VillagerService {
         );
 
         try {
-            UserTO userTO = userService.create(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword());
-            return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), userTO.getEmail(), new ArrayList(userTO.getRoles()));
+            UserTO userTO = userService.create(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword(), new HashSet<>(createVillagerRequestDTO.getRoles()));
+            return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), userTO.getEmail(), new ArrayList<String>(userTO.getRoles()));
         } catch(Exception e) {
             this.delete(newVillager.getId());
             throw e;

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Repository
 public class RoleRepository {
@@ -63,8 +64,20 @@ public class RoleRepository {
     }
 
     public List<Role> get(Set<String> names) throws SQLException {
-        PreparedStatement pStmt = dbConnection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE name in (?)");
-        pStmt.setString(1, names.stream().map(String::toUpperCase).collect(Collectors.joining(",")));
+        String stmt = String.format("SELECT * FROM " + TABLE_NAME + " WHERE name in (%s)",
+            names.stream()
+                .map(name -> "?")
+                .collect(Collectors.joining(", "))
+        );
+
+        PreparedStatement pStmt = dbConnection.prepareStatement(stmt);
+        int index = 1;
+
+        for(String name : names) {
+            pStmt.setString(index, name.toUpperCase());
+            index++;
+        }
+
         pStmt.execute();
 
         ResultSet resultSet = pStmt.getResultSet();
