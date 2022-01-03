@@ -5,40 +5,40 @@ DROP TABLE IF EXISTS "role";
 
 
 CREATE TABLE villager (
-                          id SERIAL PRIMARY KEY,
-                          name VARCHAR(60) NOT NULL,
-                          surname VARCHAR(60) NOT NULL,
-                          document VARCHAR(15) NOT NULL UNIQUE,
-                          birthday TIMESTAMP NOT NULL,
-                          wage NUMERIC(5,2)
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(60) NOT NULL,
+  surname VARCHAR(60) NOT NULL,
+  document VARCHAR(15) NOT NULL UNIQUE,
+  birthday TIMESTAMP NOT NULL,
+  wage NUMERIC(5,2)
 );
 
 CREATE TABLE "user" (
-                        id SERIAL PRIMARY KEY,
-                        villager_id BIGINT NOT NULL UNIQUE,
-                        email VARCHAR(60) NOT NULL UNIQUE,
-                        password VARCHAR(60) NOT NULL,
-                        CONSTRAINT user_table_villager_fk
-                            FOREIGN KEY (villager_id)
-                                REFERENCES villager (id)
+    id SERIAL PRIMARY KEY,
+    villager_id BIGINT NOT NULL UNIQUE,
+    email VARCHAR(60) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL,
+    CONSTRAINT user_table_villager_fk
+        FOREIGN KEY (villager_id)
+            REFERENCES villager (id)
 );
 
 CREATE TABLE "role" (
-                        id SERIAL PRIMARY KEY,
-                        name VARCHAR(60) NOT NULL UNIQUE,
-                        description TEXT
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(60) NOT NULL UNIQUE,
+    description TEXT
 );
 
 CREATE TABLE user_role (
-                           id SERIAL PRIMARY KEY,
-                           user_id BIGINT NOT NULL,
-                           role_id BIGINT NOT NULL,
-                           CONSTRAINT user_role_table_user_fk
-                               FOREIGN KEY (user_id)
-                                   REFERENCES "user" (id),
-                           CONSTRAINT user_role_table_role_fk
-                               FOREIGN KEY (role_id)
-                                   REFERENCES role (id)
+   id SERIAL PRIMARY KEY,
+   user_id BIGINT NOT NULL,
+   role_id BIGINT NOT NULL,
+   CONSTRAINT user_role_table_user_fk
+       FOREIGN KEY (user_id)
+           REFERENCES "user" (id),
+   CONSTRAINT user_role_table_role_fk
+       FOREIGN KEY (role_id)
+           REFERENCES role (id)
 );
 
 INSERT INTO villager (name, surname, document, birthday, wage) VALUES('Rhenato', 'Barauna ADMIN', '100.000.000-00', '1985-07-10', 100);

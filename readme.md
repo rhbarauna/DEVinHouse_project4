@@ -13,14 +13,17 @@ POST  - /login
 
 Autenticação do usuário retornando o token JWT necessário para autenticações futuras
 
+Request body:{ "email":"rhbarauna@powerkitchen.ca", "password":"12A345a6!" }
+
 POST - /auth/forgot
 
-Recuperação/geração de nova senha  que é enviada para diretamente para o email do usuáriop
+Recuperação/geração de nova senha  que é enviada para diretamente para o email do usuário
 
+Request body:{ "email":"rhbarauna@powerkitchen.ca" }
 
 POST - /auth/refresh_token
 
-Revalidação do token existente gerando um novo token.
+Revalidação do token existente gerando um novo token. O novo token é retornado no cabeçalho da resposta.
 
 
 ### Moradores
@@ -45,11 +48,20 @@ Listagem de moradores filtrado por idade
 
 POST - /create
 
-Criação de usuário.
+Adição de um novo morador.
+Request body:
+{
+"name":"Raphael",
+"surName":"Baraúna",
+"birthday":"1987-04-10",
+"document":"103.945.896-34",
+"wage": 10,
+"email": "rhbaraune@yahoo.com.br",
+"password":"12A345a6!",
+"roles":["USER", "ADMIN"]
+}
 
-
-DELETE - /
-
+DELETE - /{id}
 Deleção de usuário.
 
 ### Relatório da vila
@@ -57,9 +69,6 @@ GET - /report/generate
 
 Geração de relatório da fila.
 
-
-
-Na raiz do projeto temos o PDF brModeloWeb.pdf demonstrando nossa estrutura de banco.
 
 Este projeto foi implementado utilizando:
 * Spring Boot - v2.6.1
@@ -71,3 +80,8 @@ Este projeto foi implementado utilizando:
 * Jjwt - v0.9.1
 * gson - v2.8.9
 * Flyway-core - v8.3.0
+
+
+***As imagens dos modelos coneitual e lógico estão anexadas na raiz do projeto.***
+
+****O arquivo .sql se encontra em resources/db/migrations***
