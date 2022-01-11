@@ -71,9 +71,9 @@ Geração de relatório da fila.
 
 
 Este projeto foi implementado utilizando:
-* Spring Boot - v5.3.13
-* Spring Web - v5.3.13
-* Spring Mail - v5.3.13
+* Spring Boot - v2.6.1
+* Spring Web - v2.6.1
+* Spring Mail - v2.6.1
 * Spring Security - v5.6.0
 * Postgresql - v42.3.1
 * C3p0 - v0.9.5.5

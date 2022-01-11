@@ -27,6 +27,11 @@ public class DBConnectionFactory {
     }
 
     @Bean
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    @Bean
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
