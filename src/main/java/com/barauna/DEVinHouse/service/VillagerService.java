@@ -3,17 +3,20 @@ package com.barauna.DEVinHouse.service;
 import com.barauna.DEVinHouse.dto.request.CreateVillagerRequestDTO;
 import com.barauna.DEVinHouse.dto.response.FilterVillagerResponseDTO;
 import com.barauna.DEVinHouse.dto.response.VillagerDetailResponseDTO;
+import com.barauna.DEVinHouse.entity.Role;
 import com.barauna.DEVinHouse.entity.Villager;
-import com.barauna.DEVinHouse.database.repository.VillagerRepository;
+import com.barauna.DEVinHouse.repository.VillagerRepository;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
 import com.barauna.DEVinHouse.to.UserTO;
 import com.barauna.DEVinHouse.utils.VillagerUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class VillagerService {
@@ -25,69 +28,66 @@ public class VillagerService {
         this.userService = userService;
     }
 
-    public List<Villager> getVillagers() throws SQLException {
-        return villagerRepository.all();
+    public List<Villager> getVillagers() {
+        final Iterable<Villager> all = this.villagerRepository.findAll();
+        return StreamSupport.stream(all.spliterator(), false).collect(Collectors.toList());
     }
 
-    public VillagerDetailResponseDTO getById(Long villagerId) throws Exception {
-        Optional<Villager> result = villagerRepository.find(villagerId);
+    public VillagerDetailResponseDTO getById(Long villagerId) {
+        Optional<Villager> result = villagerRepository.findById(villagerId);
 
         if(result.isEmpty()) {
             return null;
         }
 
         Villager villager = result.get();
-        UserTO userTO = userService.getByVillagerId(villagerId);
 
         return new VillagerDetailResponseDTO(
                 villager.getName(), villager.getSurName(),
                 villager.getBirthday(), villager.getDocument(), villager.getWage(),
-                userTO.getEmail(), new ArrayList<>(userTO.getRoles()));
+                villager.getUser().getEmail(), new ArrayList(villager.getUser().getRoles()));
     }
 
-    public List<FilterVillagerResponseDTO> getAll() throws SQLException {
-        List<Villager> result = villagerRepository.all();
+    public List<FilterVillagerResponseDTO> getAll() {
+        List<Villager> result = this.getVillagers();
         return buildFilterVillagerResponseDTO(result);
     }
 
-    public List<FilterVillagerResponseDTO> filterByName(String villagerName) throws SQLException {
-        List<Villager> result = villagerRepository.getByName(villagerName);
+    public List<FilterVillagerResponseDTO> filterByName(String villagerName) {
+        List<Villager> result = villagerRepository.findByNameContaining(villagerName);
         return buildFilterVillagerResponseDTO(result);
     }
 
     public List<FilterVillagerResponseDTO> filterByMonth(String birthMonth) throws SQLException {
-        List<Villager> result = villagerRepository.getByBirthMonth(birthMonth);
+        List<Villager> result = villagerRepository.findByBirthMonth(birthMonth);
         return buildFilterVillagerResponseDTO(result);
     }
 
     public List<FilterVillagerResponseDTO> filterByAge(Integer age) throws SQLException {
-        List<Villager> result = villagerRepository.getByAge(age);
+        List<Villager> result = villagerRepository.findByAgeGreaterThanOrEqualTo(age);
         return buildFilterVillagerResponseDTO(result);
     }
 
+    @Transactional
     public VillagerDetailResponseDTO create(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
         validate(createVillagerRequestDTO);
-
-        final Villager newVillager = villagerRepository.store(
-            createVillagerRequestDTO.getName(),
-            createVillagerRequestDTO.getSurName(),
-            createVillagerRequestDTO.getBirthday(),
-            createVillagerRequestDTO.getDocument(),
-            createVillagerRequestDTO.getWage()
+        final Villager newVillager = new Villager(
+                createVillagerRequestDTO.getName(),
+                createVillagerRequestDTO.getSurName(),
+                createVillagerRequestDTO.getDocument(),
+                createVillagerRequestDTO.getBirthday(),
+                createVillagerRequestDTO.getWage()
         );
 
-        try {
-            UserTO userTO = userService.create(newVillager.getId(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword(), new HashSet<>(createVillagerRequestDTO.getRoles()));
-            return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), userTO.getEmail(), new ArrayList<String>(userTO.getRoles()));
-        } catch(Exception e) {
-            this.delete(newVillager.getId());
-            throw e;
-        }
+        userService.create(newVillager, createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword(), new HashSet<>(createVillagerRequestDTO.getRoles()));
+        villagerRepository.save(newVillager);
+
+        return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), newVillager.getUser().getEmail(), newVillager.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
     }
 
-    public void delete(Long villagerId) throws Exception {
-        userService.deleteByVillagerId(villagerId);
-        villagerRepository.delete(villagerId);
+    @Transactional
+    public void delete(Long villagerId) {
+        villagerRepository.deleteById(villagerId);
     }
 
     private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) {

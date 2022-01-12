@@ -1,52 +1,58 @@
 package com.barauna.DEVinHouse.entity;
 
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name="`user`")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column() private Long id;
+    @Column() private String email;
+    @Column() private String password;
 
-    private Long id;
-    private String email;
-    private String password;
-    private Long villagerId;
+    @OneToOne(mappedBy = "user")
+    private Villager villager;
 
-    public User(String email, String password, Long villagerId) {
-        this.email = email;
-        this.password = password;
-        this.villagerId = villagerId;
-    }
-
-    public User(Long id, Long villagerId, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.villagerId = villagerId;
-    }
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+        name = "user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @ElementCollection
+    private Set<Role> roles = new HashSet<>();
 
     public Long getId() {
         return id;
     }
-
     public String getEmail() {
         return email;
     }
-
     public String getPassword() {
         return password;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public Long getVillagerId() {
-        return villagerId;
+    public void setId(Long id) {
+        this.id = id;
     }
-
-    public void setVillagerId(Long villagerId) {
-        this.villagerId = villagerId;
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+    public Villager getVillager() {
+        return villager;
+    }
+    public void setVillager(Villager villager) {
+        this.villager = villager;
     }
 }

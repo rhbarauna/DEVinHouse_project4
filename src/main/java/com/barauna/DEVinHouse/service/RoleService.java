@@ -1,6 +1,6 @@
 package com.barauna.DEVinHouse.service;
 
-import com.barauna.DEVinHouse.database.repository.RoleRepository;
+import com.barauna.DEVinHouse.repository.RoleRepository;
 import com.barauna.DEVinHouse.entity.Role;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +21,11 @@ public class RoleService {
             throw new Exception("Must pass at least one Role");
         }
 
-        return repository.get(names);
+        return repository.findAllByNameIn(names);
     }
 
 
     public Role find(Long roleId) throws Exception {
-        return repository.find(roleId).orElseThrow();
+        return repository.findById(roleId).orElseThrow();
     }
 }

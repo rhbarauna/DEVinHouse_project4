@@ -1,79 +1,75 @@
 package com.barauna.DEVinHouse.service;
 
-import com.barauna.DEVinHouse.database.repository.UserRepository;
+import com.barauna.DEVinHouse.entity.Role;
+import com.barauna.DEVinHouse.entity.Villager;
+import com.barauna.DEVinHouse.repository.UserRepository;
 import com.barauna.DEVinHouse.entity.User;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
 import com.barauna.DEVinHouse.to.UserTO;
 import com.barauna.DEVinHouse.utils.UserUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final UserRoleService userRoleService;
+    private final RoleService roleService;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, UserRoleService userRoleService) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        this.userRoleService = userRoleService;
+        this.roleService = roleService;
     }
 
-    public UserTO create(Long id, String email, String password) throws Exception {
-        Set<String> roles = new HashSet<>();
-        roles.add("USER");
+    @Transactional()
+    public UserTO create(Villager villager, String email, String password, Set<String> roleNames) throws Exception {
+        validate(villager, email, password);
 
-        return create(id, email, password, roles);
-    }
+        final String maskedPassword = passwordEncoder.encode(password);
+        final Set<Role> roles = new HashSet<>(roleService.getByNames(roleNames));
 
-    public UserTO create(Long id, String email, String password, Set<String> roles) throws Exception {
-        validate(id, email, password);
+        final User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setPassword(maskedPassword);
+        newUser.setVillager(villager);
+        newUser.setRoles(roles);
 
-        String maskedPassword = passwordEncoder.encode(password);
-        final User newUser = repository.store(id, email, maskedPassword);
-
-        try {
-            userRoleService.create(newUser.getId(), roles);
-        } catch(Exception e) {
-            this.delete(newUser.getId());
-            throw e;
-        }
-        return new UserTO(newUser.getId(), newUser.getEmail(), newUser.getPassword(), newUser.getVillagerId(), roles);
+        repository.save(newUser);
+        villager.setUser(newUser);
+        return new UserTO(newUser.getId(), newUser.getEmail(), newUser.getPassword(), newUser.getVillager().getId(), roleNames);
     }
 
     public void delete(Long id) throws Exception {
-        repository.delete(id);
+        repository.deleteById(id);
     }
 
     public UserTO getUser(String email) throws Exception {
-        final User user = repository.getByEmail(email).orElseThrow();
+        final User user = repository.findOneByEmail(email).orElseThrow();
+        final Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 
-        Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
-
-        return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
+        return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillager().getId(), roles);
     }
 
     public UserTO getByVillagerId(Long villagerId) throws Exception {
-        final User user = repository.getByVillagerId(villagerId).orElseThrow();
+        final User user = repository.findOneByVillagerId(villagerId).orElseThrow();
+        final Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 
-        Set<String> roles = userRoleService.getRolesNamesByUserId(user.getId());
-
-        return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillagerId(), roles);
+        return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillager().getId(), roles);
     }
 
     public void updatePassword(String email, String newPassword) throws Exception {
-        final User user = repository.getByEmail(email).orElseThrow();
-        repository.updatePassword(user.getId(), newPassword);
+        final User user = repository.findOneByEmail(email).orElseThrow();
+        user.setPassword(newPassword);
     }
 
-    private void validate(Long id, String username, String password) throws Exception {
-        if(id == null || id <= 0) {
+    private void validate(Villager villager, String username, String password) throws Exception {
+        if(villager == null) {
             throw new InvalidVillagerDataException("invalid villager reference");
         }
 
@@ -93,7 +89,6 @@ public class UserService {
 
     public void deleteByVillagerId(Long villagerId) throws Exception {
         final UserTO userTO = this.getByVillagerId(villagerId);
-        userRoleService.deleteByUserId(userTO.getUserId());
-        repository.delete(villagerId);
+        repository.deleteByVillagerId(villagerId);
     }
 }

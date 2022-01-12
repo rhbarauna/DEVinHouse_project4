@@ -1,18 +1,36 @@
 package com.barauna.DEVinHouse.entity;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Comparator;
 
+@Entity
 public class Villager {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String name;
+
+    @Column(name = "surname")
     private String surName;
+    @Column
     private Float wage;
+    @Column
     private LocalDate birthday;
+    @Column
     private String document;
 
-    public Villager(Long id, String name, String surName, String document, LocalDate birthday, Float wage) {
-        this.id = id;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(
+        name = "user_id",
+        referencedColumnName = "id"
+    )
+    private User user;
+
+    public Villager(){}
+
+    public Villager(String name, String surName, String document, LocalDate birthday, Float wage) {
         this.name = name;
         this.surName = surName;
         this.birthday = birthday;
@@ -66,6 +84,14 @@ public class Villager {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public static final Comparator<Villager> compareByCost = (Villager v1, Villager v2) -> {
