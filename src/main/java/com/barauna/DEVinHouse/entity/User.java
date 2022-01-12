@@ -9,9 +9,9 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column() private Long id;
-    @Column() private String email;
-    @Column() private String password;
+    private Long id;
+    private String email;
+    private String password;
 
     @OneToOne(mappedBy = "user")
     private Villager villager;

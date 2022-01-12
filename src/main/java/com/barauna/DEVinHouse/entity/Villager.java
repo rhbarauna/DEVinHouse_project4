@@ -9,16 +9,12 @@ public class Villager {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
     private String name;
 
     @Column(name = "surname")
     private String surName;
-    @Column
     private Float wage;
-    @Column
     private LocalDate birthday;
-    @Column
     private String document;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

@@ -3,12 +3,13 @@ package com.barauna.DEVinHouse.repository;
 import com.barauna.DEVinHouse.entity.Villager;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.*;
 import java.util.List;
 
-@org.springframework.stereotype.Repository
+@Repository
 public interface VillagerRepository extends CrudRepository<Villager, Long> {
 
     List<Villager> findByNameContaining(String villagerName);
