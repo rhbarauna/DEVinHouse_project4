@@ -10,17 +10,17 @@ CREATE TABLE villager (
   surname VARCHAR(60) NOT NULL,
   document VARCHAR(15) NOT NULL UNIQUE,
   birthday TIMESTAMP NOT NULL,
-  wage NUMERIC(5,2)
+  wage NUMERIC(5,2),
+  user_id BIGINT NOT NULL UNIQUE,
+  CONSTRAINT villager_table_user_fk
+      FOREIGN KEY (user_id)
+          REFERENCES user (id)
 );
 
 CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
-    villager_id BIGINT NOT NULL UNIQUE,
     email VARCHAR(60) NOT NULL UNIQUE,
-    password VARCHAR(60) NOT NULL,
-    CONSTRAINT user_table_villager_fk
-        FOREIGN KEY (villager_id)
-            REFERENCES villager (id)
+    password VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE "role" (
@@ -30,7 +30,6 @@ CREATE TABLE "role" (
 );
 
 CREATE TABLE user_role (
-   id SERIAL PRIMARY KEY,
    user_id BIGINT NOT NULL,
    role_id BIGINT NOT NULL,
    CONSTRAINT user_role_table_user_fk
