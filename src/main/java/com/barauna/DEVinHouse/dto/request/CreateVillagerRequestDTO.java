@@ -2,6 +2,7 @@ package com.barauna.DEVinHouse.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class CreateVillagerRequestDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
     private String document;
-    private Float wage;
+    private BigDecimal wage;
     private String email;
     private String password;
     @JsonFormat(shape = JsonFormat.Shape.ARRAY)
@@ -30,7 +31,7 @@ public class CreateVillagerRequestDTO {
     public String getDocument() {
         return document;
     }
-    public Float getWage() {
+    public BigDecimal getWage() {
         return wage;
     }
     public String getEmail() {

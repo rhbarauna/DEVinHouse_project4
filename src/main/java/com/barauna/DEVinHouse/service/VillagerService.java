@@ -7,11 +7,11 @@ import com.barauna.DEVinHouse.entity.Role;
 import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.repository.VillagerRepository;
 import com.barauna.DEVinHouse.exception.InvalidVillagerDataException;
-import com.barauna.DEVinHouse.to.UserTO;
 import com.barauna.DEVinHouse.utils.VillagerUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -107,7 +107,7 @@ public class VillagerService {
             throw new InvalidVillagerDataException("Invalid surname. Cannot be only spaces nor contain number.");
         }
 
-        if(createVillagerRequestDTO.getWage() < 0) {
+        if(createVillagerRequestDTO.getWage().compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidVillagerDataException("Wage cannot be negative.");
         }
 

@@ -1,5 +1,6 @@
 package com.barauna.DEVinHouse.dto.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,11 +9,11 @@ public class VillagerDetailResponseDTO {
     private String surName;
     private LocalDate birthday;
     private String document;
-    private Float wage;
+    private BigDecimal wage;
     private String email;
     private List<String> roles;
 
-    public VillagerDetailResponseDTO(String name, String surName, LocalDate birthday, String document, Float wage, String email, List<String> roles) {
+    public VillagerDetailResponseDTO(String name, String surName, LocalDate birthday, String document, BigDecimal wage, String email, List<String> roles) {
         this.name = name;
         this.surName = surName;
         this.birthday = birthday;
@@ -54,11 +55,11 @@ public class VillagerDetailResponseDTO {
         this.document = document;
     }
 
-    public Float getWage() {
+    public BigDecimal getWage() {
         return wage;
     }
 
-    public void setWage(Float wage) {
+    public void setWage(BigDecimal wage) {
         this.wage = wage;
     }
 

@@ -21,17 +21,17 @@ public class VillagerController {
     }
 
     @GetMapping("/{id}")
-    public VillagerDetailResponseDTO getById(@PathVariable("id") Long villagerId) throws Exception {
+    public VillagerDetailResponseDTO getById(@PathVariable("id") Long villagerId) {
         return villagerService.getById(villagerId);
     }
 
     @GetMapping("/")
-    public List<FilterVillagerResponseDTO> list() throws SQLException {
+    public List<FilterVillagerResponseDTO> list() {
         return villagerService.getAll();
     }
 
     @GetMapping("/name")
-    public List<FilterVillagerResponseDTO> filterByName(@RequestParam("name") String villagerName) throws SQLException {
+    public List<FilterVillagerResponseDTO> filterByName(@RequestParam("name") String villagerName) {
         return villagerService.filterByName(villagerName);
     }
 
@@ -52,7 +52,7 @@ public class VillagerController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long villagerId) throws Exception {
+    public void delete(@PathVariable("id") Long villagerId) {
         villagerService.delete(villagerId);
     }
 }
