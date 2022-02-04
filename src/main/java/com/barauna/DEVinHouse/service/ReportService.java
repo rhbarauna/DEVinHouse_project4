@@ -23,7 +23,7 @@ public class ReportService {
         final List<Villager> villagers = villagerService.getVillagers();
         final Float initialBudget = villageBudget;
         final Float villageTotalCost = villagers.stream().reduce(
-                0F,(accumulator, villager) -> accumulator + villager.getWage(),
+                0F,(accumulator, villager) -> accumulator + villager.getWage().floatValue(),
                 Float::sum
         );
         final Float cost = initialBudget - villageTotalCost;

@@ -12,7 +12,7 @@ public class PasswordUtils {
         String combinedChars = capitalCaseLetters + lowerCaseLetters + specialCharacters + numbers;
         Random random = new Random();
         char[] password = new char[length];
-
+ 
         password[0] = lowerCaseLetters.charAt(random.nextInt(lowerCaseLetters.length()));
         password[1] = capitalCaseLetters.charAt(random.nextInt(capitalCaseLetters.length()));
         password[2] = specialCharacters.charAt(random.nextInt(specialCharacters.length()));

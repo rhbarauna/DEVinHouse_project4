@@ -5,6 +5,7 @@ import com.barauna.DEVinHouse.security.filters.JWTAuthorizationFilter;
 import com.barauna.DEVinHouse.service.UserDetailsServiceImpl;
 import com.barauna.DEVinHouse.utils.JWTTokenUtils;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,6 +17,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Set;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,11 +28,13 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
     private final JWTTokenUtils jwtTokenUtils;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private Environment environment;
 
-    public WebSecurityConfigAdapter(JWTTokenUtils jwtUtil, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder){
+    public WebSecurityConfigAdapter(JWTTokenUtils jwtUtil, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder, Environment environment){
         this.jwtTokenUtils = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.environment = environment;
     }
 
     @Override
@@ -41,12 +46,14 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .cors()
-            .and()
-            .csrf()
-            .disable()
-            .authorizeRequests()
+        String[] profiles = environment.getActiveProfiles();
+
+        if (!Set.of(profiles).contains("prod")) {
+            http.cors().disable();
+            http.csrf().disable();
+        }
+
+        http.authorizeRequests()
             .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST) // Todos post para as rotas contidas em public_matchers_post
             .permitAll() // permita.
             .anyRequest() // Qualquer outra req
