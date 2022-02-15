@@ -3,13 +3,13 @@ package com.barauna.DEVinHouse.integration.repository;
 import com.barauna.DEVinHouse.repository.VillagerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.sql.SQLException;
 
 
-@DataJpaTest
+//@SpringBootTest
 public class VillagerRepositoryTest {
 
     @Autowired
