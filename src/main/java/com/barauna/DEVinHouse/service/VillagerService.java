@@ -90,6 +90,18 @@ public class VillagerService {
         villagerRepository.deleteById(villagerId);
     }
 
+    public Float getTotalVillagersWage() {
+        return this.getVillagers().stream().reduce(
+                0F,(accumulator, villager) -> accumulator + villager.getWage().floatValue(),
+                Float::sum
+        );
+    }
+
+
+    public Optional<Villager> getVillagerWithHighestWage() {
+        return this.getVillagers().stream().max(Villager.compareByCost);
+    }
+
     private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) {
         return result.stream().map(villager -> new FilterVillagerResponseDTO(villager.getId(), villager.getName())).collect(Collectors.toList());
     }

@@ -8,13 +8,15 @@ import com.barauna.DEVinHouse.service.UserService;
 import com.barauna.DEVinHouse.utils.PasswordUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 public class AuthServiceTests {
     private AuthService authService;
     private UserService userService;
@@ -25,7 +27,7 @@ public class AuthServiceTests {
 
 
     @BeforeEach
-    public void beforeAll() {
+    public void beforeEach() {
         this.userService = mock(UserService.class);
         this.passwordEncoder = mock(PasswordEncoder.class);
         this.userDetailsService = mock(UserDetailsServiceImpl.class);
