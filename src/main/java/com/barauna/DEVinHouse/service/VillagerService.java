@@ -108,6 +108,7 @@ public class VillagerService {
         return result.stream().map(villager -> new FilterVillagerResponseDTO(villager.getId(), villager.getName())).collect(Collectors.toList());
     }
 
+    //TODO - convert this utils from static to dependency
     private void validate(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
         if(!VillagerUtils.isValidCPF(createVillagerRequestDTO.getDocument())) {
             throw new InvalidVillagerDataException("Invalid CPF.");
@@ -121,8 +122,16 @@ public class VillagerService {
             throw new InvalidVillagerDataException("Invalid surname. Cannot be only spaces nor contain number.");
         }
 
+        if(createVillagerRequestDTO.getWage() == null) {
+            throw new InvalidVillagerDataException("Wage cannot be null.");
+        }
+
         if(createVillagerRequestDTO.getWage().compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidVillagerDataException("Wage cannot be negative.");
+        }
+
+        if(createVillagerRequestDTO.getBirthday() == null) {
+            throw new InvalidVillagerDataException("Birthdate cannot be null.");
         }
 
         if(LocalDate.now().isBefore(createVillagerRequestDTO.getBirthday())){

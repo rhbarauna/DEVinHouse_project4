@@ -9,18 +9,16 @@ import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.repository.VillagerRepository;
 import com.barauna.DEVinHouse.service.UserService;
 import com.barauna.DEVinHouse.service.VillagerService;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -169,23 +167,114 @@ public class VillagerServiceTests {
         assertEquals(createVillagerRequestDTO.getRoles(), villagerDetailResponseDTO.getRoles());
     }
 
-//    @Test
-//    public void createVillagerThrowsErrorOnEmptyCPF() throws Exception {
-//        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
-//        createVillagerRequestDTO.setDocument("");
-//        assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO), "Invalid CPF.");
-//    }
-//    @Test
-//    public void createVillagerThrowsErrorOnCPFOutOfFormat() throws Exception {
-//        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
-//        createVillagerRequestDTO.setDocument("100.00.0000-00");
-//        assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO), "Invalid CPF.");
-//    }
-//
-//    @Test
-//    public void createVillagerThrowsErrorOnInvalidCPF() throws Exception {
-//        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
-//        createVillagerRequestDTO.setDocument("100.000.000-001");
-//        assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO), "Invalid CPF.");
-//    }
+    @Test
+    public void createVillagerThrowsErrorOnInvalidCPF() {
+        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
+        final Exception exception1 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception1.getMessage(), "Invalid CPF.");
+
+        createVillagerRequestDTO.setDocument("");
+        final Exception exception2 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception2.getMessage(), "Invalid CPF.");
+
+        createVillagerRequestDTO.setDocument("100.00.0000-00");
+        final Exception exception3 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception3.getMessage(), "Invalid CPF.");
+
+        createVillagerRequestDTO.setDocument("100.c00.000-00");
+        final Exception exception4 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception4.getMessage(), "Invalid CPF.");
+    }
+    @Test
+    public void createVillagerThrowsErrorOnInvalidName() {
+        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
+        createVillagerRequestDTO.setDocument("100.000.000-00");
+
+        final Exception exception1 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception1.getMessage(), "Invalid name. Cannot be only spaces nor contain number.");
+
+        createVillagerRequestDTO.setName("");
+        final Exception exception2 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception2.getMessage(), "Invalid name. Cannot be only spaces nor contain number.");
+
+        createVillagerRequestDTO.setName("1ndio");
+        final Exception exception3 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception3.getMessage(), "Invalid name. Cannot be only spaces nor contain number.");
+
+        createVillagerRequestDTO.setName("  Índio");
+        final Exception exception4 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception4.getMessage(), "Invalid name. Cannot be only spaces nor contain number.");
+    }
+    @Test
+    public void createVillagerThrowsErrorOnInvalidSurName() {
+        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
+        createVillagerRequestDTO.setName("José");
+        createVillagerRequestDTO.setDocument("100.000.000-00");
+
+        final Exception exception1 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception1.getMessage(), "Invalid surname. Cannot be only spaces nor contain number.");
+
+        createVillagerRequestDTO.setSurName("");
+        final Exception exception2 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception2.getMessage(), "Invalid surname. Cannot be only spaces nor contain number.");
+
+        createVillagerRequestDTO.setSurName("1ndio");
+        final Exception exception3 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception3.getMessage(), "Invalid surname. Cannot be only spaces nor contain number.");
+
+        createVillagerRequestDTO.setSurName("  Índio");
+        final Exception exception4 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception4.getMessage(), "Invalid surname. Cannot be only spaces nor contain number.");
+    }
+
+    @Test
+    public void createVillagerThrowsErrorOnInvalidWage() {
+        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
+        createVillagerRequestDTO.setName("José");
+        createVillagerRequestDTO.setSurName("da Silva");
+        createVillagerRequestDTO.setDocument("100.000.000-00");
+
+        final Exception exception1 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception1.getMessage(), "Wage cannot be null.");
+
+        createVillagerRequestDTO.setWage(BigDecimal.valueOf(-1L));
+        final Exception exception2 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception2.getMessage(), "Wage cannot be negative.");
+    }
+
+    @Test
+    public void createVillagerThrowsErrorOnInvalidBirthdate() {
+        CreateVillagerRequestDTO createVillagerRequestDTO = new CreateVillagerRequestDTO();
+        createVillagerRequestDTO.setName("José");
+        createVillagerRequestDTO.setSurName("da Silva");
+        createVillagerRequestDTO.setDocument("100.000.000-00");
+        createVillagerRequestDTO.setWage(BigDecimal.TEN);
+
+        final Exception exception1 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception1.getMessage(), "Birthdate cannot be null.");
+
+        createVillagerRequestDTO.setBirthday(LocalDate.now().plus(Period.ofDays(2)));
+        final Exception exception2 = assertThrows(Exception.class, () -> villagerService.create(createVillagerRequestDTO));
+        assertEquals(exception2.getMessage(), "Birthdate cannot be bigger than today.");
+    }
+
+    @Test
+    public void testDeleteVillagerById() {
+        assertDoesNotThrow(()->villagerService.delete(1L));
+    }
+
+    @Test
+    public void testGetTotalVillagersWage() {
+        when(villagerRepository.findAll()).thenReturn(listOfVillagers);
+        Float totalVillagersWage = villagerService.getTotalVillagersWage();
+        assertEquals(60, totalVillagersWage);
+    }
+    @Test
+    public void testGetVillagerWithHighestWage() {
+        when(villagerRepository.findAll()).thenReturn(listOfVillagers);
+        final Optional<Villager> villagerWithHighestWage = villagerService.getVillagerWithHighestWage();
+
+        assertFalse(villagerWithHighestWage.isEmpty());
+        assertEquals(listOfVillagers.get(2), villagerWithHighestWage.get());
+    }
 }
