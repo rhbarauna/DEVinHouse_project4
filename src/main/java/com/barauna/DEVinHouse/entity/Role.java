@@ -22,6 +22,15 @@ public class Role {
     @ElementCollection
     Set<User> users = new HashSet<>();
 
+    public Role() {
+    }
+
+    public Role(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
     public Long getId() {
         return id;
     }
