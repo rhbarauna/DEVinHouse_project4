@@ -66,14 +66,19 @@ public class UserService {
     }
 
     public void updatePassword(String email, String newPassword) throws Exception {
+        validate(email, newPassword);
         final User user = repository.findOneByEmail(email).orElseThrow();
         user.setPassword(newPassword);
     }
 
     private void validate(Villager villager, String username, String password) throws Exception {
-        if(villager == null) {
+        if (villager == null) {
             throw new InvalidVillagerDataException("Invalid villager reference");
         }
+
+        validate(username, password);
+    }
+    private void validate(String username, String password) throws Exception {
 
         if(!UserUtils.isValidUsername(username)) {
             throw new InvalidVillagerDataException("Invalid username. Must be a valid email");
@@ -87,10 +92,5 @@ public class UserService {
                     "● 1+ Special character\n" +
                     "● 1+ Number\n");
         }
-    }
-
-    public void deleteByVillagerId(Long villagerId) throws Exception {
-        final UserTO userTO = this.getByVillagerId(villagerId);
-        repository.deleteByVillagerId(villagerId);
     }
 }

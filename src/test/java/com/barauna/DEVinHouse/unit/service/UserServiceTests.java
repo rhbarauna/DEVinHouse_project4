@@ -134,4 +134,59 @@ public class UserServiceTests {
         assertNotNull(response);
         assertEquals(email, response.getEmail());
     }
+
+    @Test
+    public void getUserDataByEmailErrors() throws SQLException {
+        String email = null;
+        when(userRepository.findOneByEmail(email)).thenThrow(SQLException.class);
+        assertThrows(SQLException.class, () -> userService.getUser(email));
+        verify(userRepository, atLeastOnce()).findOneByEmail(email);
+
+    }
+
+    @Test
+    public void testUpdatePasswordSuccessfully() throws Exception {
+        String email = "teste@teste.com";
+        String password = "1A2b3!45678";
+        User mockedUser = mock(User.class);
+        when(userRepository.findOneByEmail(email)).thenReturn(Optional.of(mockedUser));
+
+        assertDoesNotThrow(() -> userService.updatePassword(email, password));
+    }
+
+    @Test
+    public void testUpdatePasswordInvalidArgumetnsExpectError() {
+        final Exception exception1 = assertThrows(Exception.class, () -> userService.updatePassword(null, ""));
+        final Exception exception2 = assertThrows(Exception.class, () -> userService.updatePassword("", ""));
+        final Exception exception3 = assertThrows(Exception.class, () -> userService.updatePassword( "t@t", ""));
+        final Exception exception4 = assertThrows(Exception.class, () -> userService.updatePassword( "t@.com", ""));
+        final Exception exception5 = assertThrows(Exception.class, () -> userService.updatePassword( "@.com", ""));
+        final Exception exception6 = assertThrows(Exception.class, () -> userService.updatePassword( "1@.com", ""));
+        final String expectedMessage = "Invalid username. Must be a valid email";
+        assertEquals(expectedMessage, exception1.getMessage());
+        assertEquals(expectedMessage, exception2.getMessage());
+        assertEquals(expectedMessage, exception3.getMessage());
+        assertEquals(expectedMessage, exception4.getMessage());
+        assertEquals(expectedMessage, exception5.getMessage());
+        assertEquals(expectedMessage, exception6.getMessage());
+
+        final Exception exception7 = assertThrows(Exception.class, () -> userService.updatePassword("teste@teste.com", null));
+        final Exception exception8 = assertThrows(Exception.class, () -> userService.updatePassword("teste@teste.com", ""));
+        final Exception exception9 = assertThrows(Exception.class, () -> userService.updatePassword( "teste@teste.com", "12345678"));
+        final Exception exception10 = assertThrows(Exception.class, () -> userService.updatePassword( "teste@teste.com", "a1234567"));
+        final Exception exception11 = assertThrows(Exception.class, () -> userService.updatePassword( "teste@teste.com", "a1A3456"));
+        final Exception exception12 = assertThrows(Exception.class, () -> userService.updatePassword( "teste@teste.com", "a!123456"));
+        final String expectedPasswordMessage = "Invalid password. \n" +
+                "Must have 8+ characters containing:\n" +
+                "● 1+ Uppercase\n" +
+                "● 1+ Lowercase\n" +
+                "● 1+ Special character\n" +
+                "● 1+ Number\n";
+        assertEquals(expectedPasswordMessage, exception7.getMessage());
+        assertEquals(expectedPasswordMessage, exception8.getMessage());
+        assertEquals(expectedPasswordMessage, exception9.getMessage());
+        assertEquals(expectedPasswordMessage, exception10.getMessage());
+        assertEquals(expectedPasswordMessage, exception11.getMessage());
+        assertEquals(expectedPasswordMessage, exception12.getMessage());
+    }
 }
