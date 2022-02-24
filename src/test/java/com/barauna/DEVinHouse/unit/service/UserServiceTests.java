@@ -141,7 +141,6 @@ public class UserServiceTests {
         when(userRepository.findOneByEmail(email)).thenThrow(SQLException.class);
         assertThrows(SQLException.class, () -> userService.getUser(email));
         verify(userRepository, atLeastOnce()).findOneByEmail(email);
-
     }
 
     @Test
@@ -188,5 +187,40 @@ public class UserServiceTests {
         assertEquals(expectedPasswordMessage, exception10.getMessage());
         assertEquals(expectedPasswordMessage, exception11.getMessage());
         assertEquals(expectedPasswordMessage, exception12.getMessage());
+    }
+
+    @Test
+    public void getVillagerByIdSuccessfully() throws Exception {
+        Long villagerId = 1L;
+
+        Villager mockedVillager = mock(Villager.class);
+        when(mockedVillager.getId()).thenReturn(1L);
+
+        User mockedUser = mock(User.class);
+        when(mockedUser.getId()).thenReturn(1L);
+        when(mockedUser.getEmail()).thenReturn("");
+        when(mockedUser.getPassword()).thenReturn("");
+        when(mockedUser.getVillager()).thenReturn(mockedVillager);
+
+        Role mockedRole = mock(Role.class);
+        when(mockedRole.getName()).thenReturn("ADMIN");
+
+        final Optional<User> optionalUser = Optional.of(mockedUser);
+        when(mockedUser.getRoles()).thenReturn(Set.of(mockedRole));
+        when(userRepository.findOneByVillagerId(1L)).thenReturn(optionalUser);
+
+        UserTO response = userService.getByVillagerId(1L);
+        verify(userRepository, atLeastOnce()).findOneByVillagerId(1L);
+        assertNotNull(response);
+    }
+
+    @Test
+    public void returnErrorOnNullVillagerId() throws Exception {
+        final Exception exception1 = assertThrows(Exception.class, () -> userService.getByVillagerId(null));
+        assertEquals("Invalid argument. VillagerId cannot be null", exception1.getMessage());
+
+        when(userRepository.findOneByVillagerId(1L)).thenReturn(Optional.empty());
+        final Exception exception2 = assertThrows(Exception.class, () -> userService.getByVillagerId(1L));
+        assertEquals("No user found for villager with id 1", exception2.getMessage());
     }
 }

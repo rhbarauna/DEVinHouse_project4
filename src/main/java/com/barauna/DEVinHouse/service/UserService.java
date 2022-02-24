@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,9 +60,17 @@ public class UserService {
     }
 
     public UserTO getByVillagerId(Long villagerId) throws Exception {
-        final User user = repository.findOneByVillagerId(villagerId).orElseThrow();
-        final Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        if(villagerId == null) {
+            throw new Exception("Invalid argument. VillagerId cannot be null");
+        }
+        final Optional<User> optionalUser = repository.findOneByVillagerId(villagerId);
 
+        if(optionalUser.isEmpty()) {
+            throw new Exception("No user found for villager with id " + villagerId);
+        }
+
+        final User user = optionalUser.get();
+        final Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         return new UserTO(user.getId(), user.getEmail(), user.getPassword(), user.getVillager().getId(), roles);
     }
 
