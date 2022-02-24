@@ -27,8 +27,8 @@ public class RoleServiceTests {
 
     @Test
     public void throwsExceptionOnEmptyAttr() {
-        assertThrows(Exception.class, () -> roleService.getByNames(Set.of()), "Must pass at least one Role");
-        assertThrows(Exception.class, () -> roleService.getByNames(null), "Must pass at least one Role");
+        assertThrows(Exception.class, () -> roleService.getByNames(Set.of()));
+        assertThrows(Exception.class, () -> roleService.getByNames(null));
     }
 
     @Test

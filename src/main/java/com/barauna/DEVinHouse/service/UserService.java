@@ -11,7 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,11 +47,11 @@ public class UserService {
         return new UserTO(newUser.getId(), newUser.getEmail(), newUser.getPassword(), newUser.getVillager().getId(), roleNames);
     }
 
-    public void delete(Long id) throws Exception {
+    public void delete(Long id) throws IllegalArgumentException {
         repository.deleteById(id);
     }
 
-    public UserTO getUser(String email) throws Exception {
+    public UserTO getUser(String email) throws SQLException, NoSuchElementException {
         final User user = repository.findOneByEmail(email).orElseThrow();
         final Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 
@@ -70,7 +72,7 @@ public class UserService {
 
     private void validate(Villager villager, String username, String password) throws Exception {
         if(villager == null) {
-            throw new InvalidVillagerDataException("invalid villager reference");
+            throw new InvalidVillagerDataException("Invalid villager reference");
         }
 
         if(!UserUtils.isValidUsername(username)) {
