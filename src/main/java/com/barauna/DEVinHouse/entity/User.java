@@ -29,6 +29,20 @@ public class User {
     @ElementCollection
     private Set<Role> roles = new HashSet<>();
 
+    public User() {}
+
+    public User(Long id, String email, String password, Villager villager, Set<Role> roles) {
+        this(email, password, villager, roles);
+        this.id = id;
+    }
+
+    public User(String email, String password, Villager villager, Set<Role> roles) {
+        this.email = email;
+        this.password = password;
+        this.villager = villager;
+        this.roles = roles;
+    }
+
     public Long getId() {
         return id;
     }

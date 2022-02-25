@@ -19,6 +19,38 @@ public class CreateVillagerRequestDTO {
     @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     private List<String> roles;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurName(String surName) {
+        this.surName = surName;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public void setWage(BigDecimal wage) {
+        this.wage = wage;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     public String getName() {
         return name;
     }

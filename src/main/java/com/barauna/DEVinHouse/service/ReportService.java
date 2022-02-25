@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReportService {
@@ -19,15 +20,17 @@ public class ReportService {
         this.villagerService = villagerService;
     }
 
-    public ReportResponseDTO generate() throws SQLException {
-        final List<Villager> villagers = villagerService.getVillagers();
+    public ReportResponseDTO generate() {
         final Float initialBudget = villageBudget;
-        final Float villageTotalCost = villagers.stream().reduce(
-                0F,(accumulator, villager) -> accumulator + villager.getWage().floatValue(),
-                Float::sum
-        );
+        final Float villageTotalCost = this.villagerService.getTotalVillagersWage();
         final Float cost = initialBudget - villageTotalCost;
-        final Villager villagerWithHigherCost = villagers.stream().max(Villager.compareByCost).orElse(null);
+        final Optional<Villager> optVillagerWithHigherCost = this.villagerService.getVillagerWithHighestWage();
+
+        if(optVillagerWithHigherCost.isEmpty()) {
+            return new ReportResponseDTO(0F, initialBudget, 0F, "No villager registered");
+        }
+
+        final Villager villagerWithHigherCost = optVillagerWithHigherCost.get();
         final String villagerName = String.format("%s %s", villagerWithHigherCost.getName(),villagerWithHigherCost.getSurName());
         return new ReportResponseDTO(cost, initialBudget, villageTotalCost, villagerName);
     }

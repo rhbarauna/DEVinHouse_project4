@@ -1,5 +1,6 @@
 package com.barauna.DEVinHouse.service;
 
+import com.barauna.DEVinHouse.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +23,16 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendNewPassword(String email, String newPass) {
+    public void sendNewPassword(String email, String newPass) throws Exception {
+        validate(email, newPass);
         SimpleMailMessage sm = prepareNewPasswordEmail(email, newPass);
         sendEmail(sm);
+    }
+
+    public void sendEmail(SimpleMailMessage message) {
+        LOG.info("Enviando email...");
+        mailSender.send(message);
+        LOG.info("Email enviado");
     }
 
     private SimpleMailMessage prepareNewPasswordEmail(String email, String newPass) {
@@ -37,9 +45,26 @@ public class EmailService {
         return sm;
     }
 
-    public void sendEmail(SimpleMailMessage message) {
-        LOG.info("Enviando email...");
-        mailSender.send(message);
-        LOG.info("Email enviado");
+    private void validate(String email, String password) throws Exception {
+
+        if(email == null) {
+            throw new Exception("Invalid argument. Email cannot be null");
+        }
+
+        if(email.isEmpty()) {
+            throw new Exception("Invalid argument. Email cannot be empty");
+        }
+
+        if(!UserUtils.isValidUsername(email)) {
+            throw new Exception("Invalid email");
+        }
+
+        if(password == null) {
+            throw new Exception("Invalid argument. Password cannot be null");
+        }
+
+        if(password.isEmpty()) {
+            throw new Exception("Invalid argument. Password cannot be empty");
+        }
     }
 }

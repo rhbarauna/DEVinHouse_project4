@@ -33,19 +33,21 @@ public class VillagerService {
         return StreamSupport.stream(all.spliterator(), false).collect(Collectors.toList());
     }
 
-    public VillagerDetailResponseDTO getById(Long villagerId) {
+    public Optional<VillagerDetailResponseDTO> getById(Long villagerId) {
         Optional<Villager> result = villagerRepository.findById(villagerId);
 
         if(result.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
 
         Villager villager = result.get();
 
-        return new VillagerDetailResponseDTO(
+        return Optional.of(
+            new VillagerDetailResponseDTO(
                 villager.getName(), villager.getSurName(),
                 villager.getBirthday(), villager.getDocument(), villager.getWage(),
-                villager.getUser().getEmail(), new ArrayList(villager.getUser().getRoles()));
+                villager.getUser().getEmail(), new ArrayList(villager.getUser().getRoles()))
+        );
     }
 
     public List<FilterVillagerResponseDTO> getAll() {
@@ -82,7 +84,7 @@ public class VillagerService {
         userService.create(newVillager, createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getPassword(), new HashSet<>(createVillagerRequestDTO.getRoles()));
         villagerRepository.save(newVillager);
 
-        return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), newVillager.getUser().getEmail(), newVillager.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        return new VillagerDetailResponseDTO(newVillager.getName(), newVillager.getSurName(), newVillager.getBirthday(), newVillager.getDocument(), newVillager.getWage(), createVillagerRequestDTO.getEmail(), createVillagerRequestDTO.getRoles());
     }
 
     @Transactional
@@ -90,10 +92,23 @@ public class VillagerService {
         villagerRepository.deleteById(villagerId);
     }
 
+    public Float getTotalVillagersWage() {
+        return this.getVillagers().stream().reduce(
+                0F,(accumulator, villager) -> accumulator + villager.getWage().floatValue(),
+                Float::sum
+        );
+    }
+
+
+    public Optional<Villager> getVillagerWithHighestWage() {
+        return this.getVillagers().stream().max(Villager.compareByCost);
+    }
+
     private List<FilterVillagerResponseDTO> buildFilterVillagerResponseDTO(List<Villager> result) {
         return result.stream().map(villager -> new FilterVillagerResponseDTO(villager.getId(), villager.getName())).collect(Collectors.toList());
     }
 
+    //TODO - convert this utils from static to dependency
     private void validate(CreateVillagerRequestDTO createVillagerRequestDTO) throws Exception {
         if(!VillagerUtils.isValidCPF(createVillagerRequestDTO.getDocument())) {
             throw new InvalidVillagerDataException("Invalid CPF.");
@@ -107,8 +122,16 @@ public class VillagerService {
             throw new InvalidVillagerDataException("Invalid surname. Cannot be only spaces nor contain number.");
         }
 
+        if(createVillagerRequestDTO.getWage() == null) {
+            throw new InvalidVillagerDataException("Wage cannot be null.");
+        }
+
         if(createVillagerRequestDTO.getWage().compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidVillagerDataException("Wage cannot be negative.");
+        }
+
+        if(createVillagerRequestDTO.getBirthday() == null) {
+            throw new InvalidVillagerDataException("Birthdate cannot be null.");
         }
 
         if(LocalDate.now().isBefore(createVillagerRequestDTO.getBirthday())){

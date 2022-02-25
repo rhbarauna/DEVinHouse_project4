@@ -1,10 +1,13 @@
 package com.barauna.DEVinHouse.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
+@Component
 public class PasswordUtils {
     /** https://www.tutorialspoint.com/Generating-password-in-Java */
-    public static char[] generatePassword(int length) {
+    public char[] generatePassword(int length) {
         String capitalCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         String specialCharacters = "!@#$";

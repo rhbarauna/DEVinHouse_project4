@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/villager")
@@ -22,7 +23,8 @@ public class VillagerController {
 
     @GetMapping("/{id}")
     public VillagerDetailResponseDTO getById(@PathVariable("id") Long villagerId) {
-        return villagerService.getById(villagerId);
+        Optional<VillagerDetailResponseDTO> response = villagerService.getById(villagerId);
+        return response.get();
     }
 
     @GetMapping("/")
