@@ -25,6 +25,5 @@ public class ReportQueueConsumer {
             logger.info("Starting report ".concat(message.getReportName()).concat(" generation."));
             final ReportResponseDTO generated = reportService.generate();
             logger.info("Report generated.".concat("").concat(generated.toString()));
-
     }
 }

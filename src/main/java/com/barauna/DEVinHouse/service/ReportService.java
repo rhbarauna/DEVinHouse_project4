@@ -44,7 +44,7 @@ public class ReportService {
         return new ReportResponseDTO(cost, initialBudget, villageTotalCost, villagerName);
     }
 
-    public boolean registerReportJob(GenerateReportMessageDTO dto) {
-        return amqpService.sendMessage(reportRoutingKey, dto);
+    public void registerReportJob(GenerateReportMessageDTO dto) throws Exception {
+        amqpService.sendMessage(reportRoutingKey, dto);
     }
 }

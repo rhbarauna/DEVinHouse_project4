@@ -15,19 +15,19 @@ public class AMQPService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public boolean sendMessage(String routingKey, Object messageBody) {
+    public void sendMessage(String routingKey, Object messageBody) throws Exception {
         try{
             logger.debug("Sending message: ".concat(messageBody.toString()).concat(", to ").concat(routingKey));
             rabbitTemplate.convertAndSend(routingKey, messageBody);
-            return true;
         } catch (AmqpException e) {
             if(logger.isTraceEnabled()){
                 logger.trace(e.getMessage(), e);
-                return false;
             }
 
-            logger.error(e.getMessage());
-            return false;
+            if(logger.isErrorEnabled()) {
+                logger.error(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
         }
     }
 }

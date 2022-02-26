@@ -36,7 +36,7 @@ public class RabbitMQConfig {
     @Bean(name="report-queue")
     public Queue createReportQueue() {
         Map<String, Object> arguments=new HashMap<>();
-        arguments.put("x-message-ttl", 300);
+//        arguments.put("x-message-ttl", 300);
         return new Queue(reportQueue, true, false, false, arguments);
     }
 

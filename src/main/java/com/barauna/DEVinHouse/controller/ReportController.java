@@ -29,22 +29,21 @@ public class ReportController {
     @GetMapping("/generate")
     public ResponseEntity<String> generate() {
         GenerateReportMessageDTO dto = new GenerateReportMessageDTO();
-        boolean response = false;
-        for(int i = 0; i < 1000; i++) {
-            LocalDateTime now = LocalDateTime.now();
-            dto.setReportName("report_".concat(now.toString()));
-            logger.info("Generating report ".concat(String.valueOf(i)).concat(" ").concat(dto.getReportName()));
-            response = reportService.registerReportJob(dto);
-        }
+        LocalDateTime now = LocalDateTime.now();
+        dto.setReportName("report_".concat(now.toString()));
+        try{
+            for(int i = 0; i < 1000; i++) {
+                reportService.registerReportJob(dto);
+            }
 
-        if(!response) {
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(dto.getReportName().concat(" will be generated and sent to your email."));
+
+        } catch(Exception e) {
             return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .build();
+                .body(e.getMessage());
         }
-
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(dto.getReportName());
     }
 }
