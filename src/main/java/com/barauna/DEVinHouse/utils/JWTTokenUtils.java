@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,8 @@ import java.util.Date;
 public class JWTTokenUtils {
     private final String secret;
     private final Long expiration;
+    private Logger logger = LoggerFactory.getLogger(JWTTokenUtils.class);
+
 
     public JWTTokenUtils(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") Long expiration) {
         this.secret = secret;
@@ -47,7 +51,7 @@ public class JWTTokenUtils {
             Jws<Claims> parseClaimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return parseClaimsJws.getBody();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         }
     }

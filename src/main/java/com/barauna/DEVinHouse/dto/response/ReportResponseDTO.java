@@ -28,4 +28,14 @@ public class ReportResponseDTO {
     public String getVillagerWithHigherCost() {
         return villagerWithHigherCost;
     }
+
+    @Override
+    public String toString() {
+        return "ReportResponseDTO {" +
+            "'cost':" + cost +
+            ", 'initialBudget':" + initialBudget +
+            ", 'villagersCostSum':" + villagersCostSum +
+            ", 'villagerWithHigherCost':'" + villagerWithHigherCost + '\'' +
+        "}";
+    }
 }

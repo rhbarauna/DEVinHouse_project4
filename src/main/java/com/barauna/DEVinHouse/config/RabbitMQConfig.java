@@ -29,26 +29,26 @@ public class RabbitMQConfig {
     }
 
 
-    @Value("${amqp.queue.name}") private String queueName;
-    @Value("${amqp.exchange.name}") private String exchangeName;
-    @Value("${amqp.routing.key}") private String routingKey;
+    @Value("${amqp.queue.report}") private String reportQueue;
+    @Value("${amqp.exchange.report}") private String reportExchange;
+    @Value("${amqp.routing.key.report}") private String reportRoutingKey;
 
-    @Bean
-    public Queue createQueue() {
+    @Bean(name="report-queue")
+    public Queue createReportQueue() {
         Map<String, Object> arguments=new HashMap<>();
         arguments.put("x-message-ttl", 300);
-        return new Queue(queueName, true, false, false, arguments);
+        return new Queue(reportQueue, true, false, false, arguments);
     }
 
-    @Bean
-    public DirectExchange createExchange() {
+    @Bean(name="report-exchange")
+    public DirectExchange createReportExchange() {
 //      ExchangeBuilder.directExchange(exchangeName).durable(true);
-        return new DirectExchange(exchangeName, true, false);
+        return new DirectExchange(reportExchange, true, false);
     }
 
-    @Bean
-    public Binding binding() {
-        return new Binding(queueName, Binding.DestinationType.QUEUE,
-                exchangeName, routingKey, null);
+    @Bean(name="report-binding")
+    public Binding reportQueueBinding() {
+        return new Binding(reportQueue, Binding.DestinationType.QUEUE,
+                reportExchange, reportRoutingKey, null);
     }
 }
