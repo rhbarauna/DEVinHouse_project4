@@ -28,17 +28,11 @@ public class ReportController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/generate")
     public ResponseEntity<String> generate() {
-        GenerateReportMessageDTO dto = new GenerateReportMessageDTO();
-        LocalDateTime now = LocalDateTime.now();
-        dto.setReportName("report_".concat(now.toString()));
         try{
-            for(int i = 0; i < 1000; i++) {
-                reportService.registerReportJob(dto);
-            }
-
+            final GenerateReportMessageDTO generateReportMessageDTO = reportService.registerReportJob();
             return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(dto.getReportName().concat(" will be generated and sent to your email."));
+                .body(generateReportMessageDTO.getReportName().concat(" will be generated and sent to your email."));
 
         } catch(Exception e) {
             return ResponseEntity

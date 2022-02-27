@@ -1,5 +1,7 @@
 package com.barauna.DEVinHouse.amqp;
 
+import com.barauna.DEVinHouse.amqp.dto.AMQPMessage;
+import com.barauna.DEVinHouse.amqp.dto.GenerateReportMessageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -15,10 +17,10 @@ public class AMQPService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendMessage(String routingKey, Object messageBody) throws Exception {
+    public void sendMessage(String routingKey, AMQPMessage message) throws Exception {
         try{
-            logger.debug("Sending message: ".concat(messageBody.toString()).concat(", to ").concat(routingKey));
-            rabbitTemplate.convertAndSend(routingKey, messageBody);
+            logger.debug("Sending message: ".concat(message.getBody().toString()).concat(", to ").concat(routingKey));
+            rabbitTemplate.convertAndSend(routingKey, message);
         } catch (AmqpException e) {
             if(logger.isTraceEnabled()){
                 logger.trace(e.getMessage(), e);

@@ -4,6 +4,7 @@ import com.barauna.DEVinHouse.amqp.AMQPService;
 import com.barauna.DEVinHouse.dto.response.ReportResponseDTO;
 import com.barauna.DEVinHouse.entity.Villager;
 import com.barauna.DEVinHouse.service.ReportService;
+import com.barauna.DEVinHouse.service.UserDetailsServiceImpl;
 import com.barauna.DEVinHouse.service.VillagerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,14 @@ public class ReportServiceTests {
     private ReportService reportService;
     private VillagerService villagerService;
     private AMQPService amqpService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @BeforeEach
     public void beforeEach() {
         villagerService = mock(VillagerService.class);
         amqpService = mock(AMQPService.class);
-        reportService = new ReportService( 1000F, "", villagerService, amqpService);
+        userDetailsService = mock(UserDetailsServiceImpl.class);
+        reportService = new ReportService( 1000F, "", "", villagerService, amqpService, userDetailsService);
     }
 
     @Test

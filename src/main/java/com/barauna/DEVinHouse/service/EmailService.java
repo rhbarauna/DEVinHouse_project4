@@ -29,24 +29,48 @@ public class EmailService {
         sendEmail(sm);
     }
 
-    public void sendEmail(SimpleMailMessage message) {
+
+    public void send(String email, String title, String message) throws Exception {
+        validate(email);
+        SimpleMailMessage sm = prepareEmail(email);
+        sm.setSubject(title);
+        sm.setText(message);
+        sendEmail(sm);
+    }
+
+    private void sendEmail(SimpleMailMessage message) {
         LOG.info("Enviando email...");
         mailSender.send(message);
         LOG.info("Email enviado");
     }
 
+//    public void sendMailWithAttachment(String email, String reportName, DataSource source) {
+//        MimeMessage message = new MimeMessage();
+//        MimeMessageHelper helper = MimeMessageHelper(message, true);
+//        helper.setSubject("Village report");
+//        helper.setFrom(sender);
+//        helper.setTo(email);
+//        helper.setText("Here is the requested report. ENJOY!!!", false);
+//        helper.addAttachment(source.getName(), source);
+//        javaMailSender.send(message);
+//    }
+
     private SimpleMailMessage prepareNewPasswordEmail(String email, String newPass) {
-        SimpleMailMessage sm = new SimpleMailMessage();
-        sm.setTo(email);
+        SimpleMailMessage sm = prepareEmail(email);
         sm.setFrom(sender);
         sm.setSubject("Solicitação de nova senha");
-        sm.setSentDate(new Date(System.currentTimeMillis()));
         sm.setText("Nova senha: " + newPass);
         return sm;
     }
 
-    private void validate(String email, String password) throws Exception {
+    private SimpleMailMessage prepareEmail(String email) {
+        SimpleMailMessage sm = new SimpleMailMessage();
+        sm.setTo(email);
+        sm.setSentDate(new Date(System.currentTimeMillis()));
+        return sm;
+    }
 
+    private void validate(String email) throws Exception {
         if(email == null) {
             throw new Exception("Invalid argument. Email cannot be null");
         }
@@ -58,6 +82,10 @@ public class EmailService {
         if(!UserUtils.isValidUsername(email)) {
             throw new Exception("Invalid email");
         }
+    }
+
+    private void validate(String email, String password) throws Exception {
+        validate(email);
 
         if(password == null) {
             throw new Exception("Invalid argument. Password cannot be null");
