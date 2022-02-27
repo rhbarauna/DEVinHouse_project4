@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -55,7 +56,7 @@ public class ReportService {
         LocalDateTime now = LocalDateTime.now();
 
         GenerateReportMessageDTO dto = new GenerateReportMessageDTO();
-        dto.setReportName("report_".concat(now.toString()));
+        dto.setReportName("report_".concat(now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
         dto.setSendTo(userDetailsService.authenticated().getUsername());
 
         sendToReportQueue(new AMQPMessage<>(dto));

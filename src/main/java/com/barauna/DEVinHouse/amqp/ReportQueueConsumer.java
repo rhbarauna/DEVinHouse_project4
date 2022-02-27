@@ -7,11 +7,12 @@ import com.barauna.DEVinHouse.service.EmailService;
 import com.barauna.DEVinHouse.service.ReportService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.sun.istack.ByteArrayDataSource;
-import javax.activation.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -32,11 +33,19 @@ public class ReportQueueConsumer {
     @RabbitListener(queues="${amqp.queue.report}")
     public void consume(AMQPMessage<GenerateReportMessageDTO> message) {
         try {
-            logger.info("Starting report ".concat(message.getBody().getReportName()).concat(" generation."));
+            final String reportName = message.getBody().getReportName() + ".pdf";
+            logger.info("Starting report " + reportName +" generation.");
+
             final ReportResponseDTO generated = reportService.generate();
-            writePdf(message.getBody().getReportName(), generated);
+            writePdf(reportName, generated);
+            emailService.sendEmailWithAttachment(
+                    message.getBody().getSendTo(),
+                    "Village Report",
+                    "This is the reported requested.",
+                    reportName);
             logger.info("Report generated. ".concat(generated.toString()));
         } catch(Exception e) {
+            logger.info("Report generation error. Sending to DLQ. " + e.getMessage());
             reportService.sendToDLX(message);
         }
     }
@@ -49,6 +58,8 @@ public class ReportQueueConsumer {
             return;
         }
 
+        logger.error("Report generation number of tries exceeded");
+
         try {
             emailService.send(message.getBody().getSendTo(), "Falha ao gerar relatório", "Desculpe. Não conseguimos gerar o relatório solicitado. Tente novamente.");
         } catch(Exception e) {
@@ -59,7 +70,8 @@ public class ReportQueueConsumer {
     private void writePdf(String fileName, ReportResponseDTO content) throws IOException, DocumentException {
         FileOutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream(fileName.concat(".pdf"));
+            String filePath = new File(fileName).getAbsolutePath();
+            outputStream = new FileOutputStream(filePath);
             Document document = new Document();
             PdfWriter.getInstance(document, outputStream);
             document.open();

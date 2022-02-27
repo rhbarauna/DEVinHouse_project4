@@ -3,8 +3,8 @@ package com.barauna.DEVinHouse.unit.service;
 import com.barauna.DEVinHouse.service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -13,12 +13,12 @@ public class EmailServiceTests {
 
     private String sender;
     private EmailService emailService;
-    private MailSender mailSender;
+    private JavaMailSender mailSender;
 
     @BeforeEach
     public void beforeEach(){
         this.sender = "testSender@test.com";
-        this.mailSender = mock(MailSender.class);
+        this.mailSender = mock(JavaMailSender.class);
         this.emailService = new EmailService(sender, mailSender);
     }
 

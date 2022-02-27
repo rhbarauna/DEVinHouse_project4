@@ -4,23 +4,34 @@ import com.barauna.DEVinHouse.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 @Service
 public class EmailService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
-
-    private MailSender mailSender;
+    private JavaMailSender mailSender;
     private String sender;
 
-    public EmailService(@Value("${spring.mail.default.sender}") String sender, MailSender mailSender) {
+    public EmailService(@Value("${spring.mail.default.sender}") String sender, JavaMailSender javaMailSender) {
         this.sender = sender;
-        this.mailSender = mailSender;
+        this.mailSender = javaMailSender;
     }
 
     public void sendNewPassword(String email, String newPass) throws Exception {
@@ -44,17 +55,6 @@ public class EmailService {
         LOG.info("Email enviado");
     }
 
-//    public void sendMailWithAttachment(String email, String reportName, DataSource source) {
-//        MimeMessage message = new MimeMessage();
-//        MimeMessageHelper helper = MimeMessageHelper(message, true);
-//        helper.setSubject("Village report");
-//        helper.setFrom(sender);
-//        helper.setTo(email);
-//        helper.setText("Here is the requested report. ENJOY!!!", false);
-//        helper.addAttachment(source.getName(), source);
-//        javaMailSender.send(message);
-//    }
-
     private SimpleMailMessage prepareNewPasswordEmail(String email, String newPass) {
         SimpleMailMessage sm = prepareEmail(email);
         sm.setFrom(sender);
@@ -68,6 +68,21 @@ public class EmailService {
         sm.setTo(email);
         sm.setSentDate(new Date(System.currentTimeMillis()));
         return sm;
+    }
+
+    public void sendEmailWithAttachment(String email, String title, String message, String fileName) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setTo(email);
+        helper.setSubject(title);
+        helper.setText(message);
+
+        String filePath = new File(fileName).getAbsolutePath();
+        FileSystemResource file = new FileSystemResource(filePath);
+
+        helper.addAttachment(fileName, file);
+
+        mailSender.send(mimeMessage);
     }
 
     private void validate(String email) throws Exception {
