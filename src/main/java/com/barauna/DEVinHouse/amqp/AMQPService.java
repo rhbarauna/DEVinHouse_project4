@@ -18,8 +18,13 @@ public class AMQPService {
     }
 
     public void sendMessage(String routingKey, AMQPMessage message) throws Exception {
-        try{
+        try {
             logger.debug("Sending message: ".concat(message.getBody().toString()).concat(", to ").concat(routingKey));
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Message body cannot be null");
+        }
+
+        try{
             rabbitTemplate.convertAndSend(routingKey, message);
         } catch (AmqpException e) {
             if(logger.isTraceEnabled()){
