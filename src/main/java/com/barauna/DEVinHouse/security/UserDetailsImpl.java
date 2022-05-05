@@ -23,11 +23,9 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public UserDetailsImpl(String email, String password, Set<String> authorities) {
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities.stream()
+        this(email, password, authorities.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.replaceAll("ROLE_", "")))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
